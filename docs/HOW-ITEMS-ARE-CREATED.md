@@ -8,7 +8,7 @@ A short plain-language paper for DMs and followers who want to know what this to
 
 Table Loot Forge does **not** store a big list of finished magic items and pick one at random.
 
-There is no hidden vault of “Sword of the Ember King +2” waiting to be drawn. When you tap **Create**, the app **builds** a new item on the spot by combining curated pieces: name parts, a mechanics template, a rarity “stat band,” a sensory description, and lore fragments.
+There is no hidden vault of “Sword of the Ember King +2” waiting to be drawn. When you tap **Create**, the app **builds** a new item on the spot by combining curated pieces: name parts, a mechanics kit, a rarity “stat band,” a sensory description, and lore fragments.
 
 That is why two Rare Weapons almost never look the same — and why the tool feels like a forge instead of a catalog.
 
@@ -18,10 +18,26 @@ That is why two Rare Weapons almost never look the same — and why the tool fee
 
 You always pick two things before Create works:
 
-1. **Rarity** — Common, Uncommon, Rare, Very Rare, or Legendary  
-2. **Type / slot** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, or Tincture  
+1. **Rarity** — Common, Uncommon, Rare, Very Rare, or Legendary
+2. **Type / slot** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, or Tincture
 
-Those choices are fixed for that roll. Everything else is rolled from curated tables: description/lore in `loot-flavor.js`, gear templates in `loot-mech.js`, scroll/potion/tincture templates in `loot-consumables.js`, and assembly/UI in `loot.js`.
+Those choices are fixed for that roll. Everything else is rolled from curated tables:
+
+| File | Job |
+| --- | --- |
+| `loot.js` | Rarity bands, names, category line, look/lore assembly, history, share/copy, anti-repeat |
+| `loot-flavor.js` | Look paragraphs + lore fragments (origin / rumor / quirk) |
+| `loot-kits-w.js` | Weapon kits |
+| `loot-kits-as.js` | Armor + Shield kits |
+| `loot-kits-h.js` | Helmet kits |
+| `loot-kits-cn.js` | Cloak + Necklace kits |
+| `loot-kits-3.js` | Ring + Gloves kits |
+| `loot-kits-4.js` | Belt + Boots kits |
+| `loot-mech.js` | Picks a gear kit, fills `{placeholders}`, rolls attunement |
+| `loot-potions.js` | Potion + tincture pools |
+| `loot-scrolls-a1.js` / `a2.js` / `b.js` | Scroll pools by spell-feel tier |
+| `loot-scrolls.js` | Scroll picker |
+| `loot-scrolls-a.js` / `loot-consumables.js` | Load-order shims |
 
 ---
 
@@ -40,16 +56,24 @@ Rarity is not only a label on the card. It selects a **stat band** used to fill 
 
 **Power scaling by rarity is intentional and preserved.** The forge expands *prose* (clearer adjudication, description, lore) around those numbers — it does not nerf Legendary down to Common flavor.
 
+| Rarity | Bonus | DC | Small / big dice | Uses | Attune chance | Scroll feel |
+| --- | --- | --- | --- | --- | --- | --- |
+| Common | +0 | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
+| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | ~35% | 1st–2nd |
+| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | ~75% | 3rd–4th |
+| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | ~90% | 5th–6th |
+| Legendary | +3 | 18 | 4d6 / 6d8 | at will | always | 7th–9th |
+
 ---
 
 ## 4. What type really means: a template family
 
 Type chooses **which family of templates** can fire:
 
-- **Gear slots** (Weapon through Boots) — lasting magic items. Names come from adjective + noun lists for that slot. Mechanics come from a random **gear template** for that slot, with `{placeholders}` filled from the rarity band (and random damage type, skill, save, etc.).
-- **Scroll** — single-use spell-like effects. A named scroll is picked from the rarity’s scroll tier list; DC and attack bonus come from the band.
-- **Potion** — consumable quaffs with fuller combat/utility text.
-- **Tincture** — lighter, shorter herbal sips (still consumable homebrew).
+- **Gear slots** (Weapon through Boots) — lasting magic items. Names come from adjective + noun lists for that slot. Mechanics come from a random **property kit** for that slot (~20 kits each), with `{placeholders}` filled from the rarity band (and random damage type, skill, save, etc.).
+- **Scroll** — single-use spell-like effects. A named scroll is picked from the rarity’s scroll-tier list (~12 per band); DC and attack bonus come from the band.
+- **Potion** — consumable quaffs with fuller combat/utility text (~20).
+- **Tincture** — lighter, shorter herbal sips (still consumable homebrew, ~20).
 
 So: rarity sets *how hard the numbers hit*; type sets *what kind of object* you are forging.
 
@@ -59,13 +83,14 @@ So: rarity sets *how hard the numbers hit*; type sets *what kind of object* you 
 
 On Create, roughly this happens:
 
-1. **Load the rarity band** from the fixed `S{…}` table.  
-2. **Branch by type** — gear vs scroll vs potion vs tincture.  
-3. **Name** — for gear: random adjective(s) + noun for that slot (a few name patterns). For consumables/scrolls: patterned titles (`Scroll of …`, `Potion of …`, `Tincture of …`).  
-4. **Mechanics** — pick one template string from that type’s pool; replace `{b}`, `{dc}`, `{d}`, `{D}`, `{u}`, `{t}`, `{sk}`, `{sv}`, and friends with live values. Gear may append an attunement clause based on rarity chance.  
-5. **Description (Look)** — pick sensory/appearance prose from pools keyed to type (what it looks and feels like at the table).  
-6. **Lore** — compose **2–3 sentences** from fragments: an **origin**, a **rumor** (sometimes rarity-tinged), and a **quirk/maker** note when the roll includes all three. Fragments are filtered toward the item’s type when possible.  
-7. **Card assembly** — chips (rarity, slot, Homebrew, optional Attunement), Description, table-ready mechanics, lore; history + share/copy use the same fields.
+1. **Load the rarity band** from the fixed `S{…}` table in `loot.js`.
+2. **Branch by type** — gear vs scroll vs potion vs tincture.
+3. **Name** — for gear: random adjective(s) + noun for that slot (a few name patterns). For consumables/scrolls: patterned titles (`Scroll of …`, `Potion of …`, `Tincture of …`).
+4. **Mechanics** — pick one kit from that type’s pool; replace `{b}`, `{dc}`, `{d}`, `{D}`, `{u}`, `{t}`, `{sk}`, `{sv}`, and friends with live values. Gear may append an attunement clause based on rarity chance.
+5. **Anti-repeat** — the forge fingerprints the effect (kit titles, or consumable name) and checks a localStorage ring of the last ~40 signatures. If this effect was used recently, it re-rolls up to ~12 times before accepting a repeat.
+6. **Description (Look)** — pick sensory/appearance prose from pools keyed to type (what it looks and feels like at the table).
+7. **Lore** — compose **2–3 sentences** from fragments: an **origin**, a **rumor** (sometimes rarity-tinged), and a **quirk/maker** note when the roll includes all three. Fragments are filtered toward the item’s type when possible.
+8. **Card assembly** — category line, Homebrew / Attunement chips, Look, named properties, lore; history + share/copy use the same fields.
 
 Nothing in that pipeline is “look up finished item #47.” It is always combination + fill.
 
@@ -75,10 +100,11 @@ Nothing in that pipeline is “look up finished item #47.” It is always combin
 
 Uniqueness comes from **combinatorial explosion**:
 
-- Many adjectives × many nouns × several name patterns  
-- Multiple mechanics templates per type × many fill-ins (damage types, skills, saves)  
-- Separate description pools per type  
+- Many adjectives × many nouns × several name patterns
+- ~20 mechanics kits per gear type × many fill-ins (damage types, skills, saves)
+- Separate description pools per type
 - Lore built from origin × rumor × quirk fragments (type- and rarity-aware)
+- Recent-effect re-rolls so the same kit is less likely to land twice in a session
 
 Even with the same rarity and type, the odds of an identical name + mechanics + look + lore bundle are low. That is the point of a forge.
 
@@ -88,18 +114,19 @@ Even with the same rarity and type, the odds of an identical name + mechanics + 
 
 **Deterministic (you control):**
 
-- Rarity → which stat band  
-- Type → which template family and name/look pools  
-- UI rules — Create disabled until both are selected; homebrew labeling; history size; share/copy format  
+- Rarity → which stat band
+- Type → which kit family and name/look pools
+- UI rules — Create disabled until both are selected; homebrew labeling; history size; share/copy format
 
 **Random (the forge rolls):**
 
-- Which name pattern and words  
-- Which mechanics template  
-- Which damage type / skill / save (when the template needs them)  
-- Whether attunement is required (weighted by rarity)  
-- Which description line  
-- Which lore fragments and whether you get two or three sentences  
+- Which name pattern and words
+- Which mechanics kit
+- Which damage type / skill / save (when the kit needs them)
+- Whether attunement is required (weighted by rarity)
+- Which description line
+- Which lore fragments and whether you get two or three sentences
+- Whether a recent-effect collision forces a re-roll
 
 Same inputs never guarantee the same output.
 
@@ -109,10 +136,10 @@ Same inputs never guarantee the same output.
 
 Treat every card as **5e-flavored homebrew**, not official Wizards of the Coast material.
 
-- If text fights your table’s rulings, **you win**. Trim a clause, change a damage type, or rename the item.  
-- If two features stack weirdly with an official item, call it a variant or unique relic.  
-- Scroll “tiers” are **feel bands**, not exact Player’s Handbook spell levels.  
-- Attunement, action economy, and saves are written to be DM-fast — still override when fiction demands it.  
+- If text fights your table’s rulings, **you win**. Trim a clause, change a damage type, or rename the item.
+- If two features stack weirdly with an official item, call it a variant or unique relic.
+- Scroll “tiers” are **feel bands**, not exact Player’s Handbook spell levels.
+- Attunement, action economy, and saves are written to be DM-fast — still override when fiction demands it.
 
 The forge’s job is to hand you a clear, shareable card between turns. Your job is adjudication and story.
 
@@ -120,10 +147,10 @@ The forge’s job is to hand you a clear, shareable card between turns. Your job
 
 ## 9. What stays the same for players at the table
 
-- Flow remains **rarity → type → Create**  
-- Cards still show homebrew labeling  
-- History (local) and Text players / Copy card still work  
-- Shared plain text includes Description, Mechanics, and Lore  
+- Flow remains **rarity → type → Create**
+- Cards still show homebrew labeling
+- History (local) and Text players / Copy card still work
+- Shared plain text includes Look, named properties, and Lore
 
 Only the richness of the generated text — denser mechanics, a visible Look/Description, longer tied lore — has grown.
 
