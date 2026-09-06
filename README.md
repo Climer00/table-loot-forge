@@ -69,6 +69,10 @@ Cards follow a compact DMG/D&D Beyond–style stack:
 - **Gear** — lasting magic items for the chosen slot; power (DC, dice, uses, attunement) scales with rarity  
 
 
+### Variety pools + anti-repeat
+
+Property kits and consumable tables are intentionally large (roughly **20 kits per gear type**; **≥12 potions**, **≥12 tinctures**, **≥8 scrolls per spell-tier band**) so Create rolls feel distinct. The forge also keeps a **session/localStorage ring of the last ~40 effect signatures** and **re-rolls up to ~12 times** when a freshly picked kit/effect was used recently — eventual repeats are still allowed if pools are exhausted.
+
 ## How items are created
 
 This is **not** a fixed list of finished magic items. On Create, the app randomly combines curated template tables (rarity stat bands, type templates, name lists, description/lore fragments). For a plain-language walkthrough aimed at DMs and followers, see:
