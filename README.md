@@ -1,6 +1,6 @@
 # Table Loot Forge
 
-On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs. Pick a rarity, pick a type/slot, tap **Create** — get one table-ready **loot card** with a sensory **Description**, denser table-ready **mechanics**, and **2–3 sentences of lore**.
+On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs. Pick a rarity, pick a type/slot, tap **Create** — get one table-ready **loot card** in a **Beyond/DMG hybrid** layout: category line, look, named properties, and lore.
 
 Built for mid-session speed: big tap targets, phone-first, adjudication-simple. Effects are familiar in shape (rarities, slots, DCs, dice) but freer than official items — everything is labeled **homebrew**.
 
@@ -18,7 +18,7 @@ UI is a charcoal/ember **loot forge** (not purple mystical) — quick DM drops m
 1. Select a **Rarity** — Common, Uncommon, Rare, Very Rare, Legendary  
 2. Select a **Type** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, Tincture  
 3. Tap **Create** (enabled only when both are selected)  
-4. Read the **loot card**: name, rarity/type chips, **Description** (look/feel), **table-ready mechanics**, and **lore** (2–3 sentences)  
+4. Read the **loot card**: name, **category line** (type/rarity/attunement), **look**, **named properties** (bold title + rules), and **lore**  
 
 Tap Create again anytime for another roll with the same filters.
 
@@ -34,18 +34,34 @@ On each card (current + history):
 - **Copy card** — copies formatted plain text ready for iMessage/SMS/Discord (fallback on desktop when share isn’t available).
 - On mobile without share: optional **Open in Messages** (`sms:?&body=`) with a shortened body.
 
-Plain text looks like:
+Plain text (Beyond/DMG hybrid) looks like:
 
 ```
-⚔️ NAME
-Rarity · Type
-Description: ...
-Mechanics: ...
-Lore: ...
+Name
+Type (subtype if any), rarity (requires attunement …)
+
+[Look / appearance paragraph]
+
+**Property Name.** Rules text…
+**Another Property.** Rules text…
+
+Lore: …
 (Homebrew)
 ```
 
+History compact cards show **name + category line + 1–2 property titles**.
+
 ## Design notes
+
+### Card layout (Beyond/DMG hybrid)
+
+Cards follow a compact DMG/D&D Beyond–style stack:
+
+1. **Name**
+2. **Category line** — mapped from forge types (e.g. `Weapon (any), rare (requires attunement)`, `Wondrous item (cloak), uncommon`, `Potion, common`, `Scroll, very rare`)
+3. **Look** — short appearance paragraph
+4. **Named properties** — array of `{title, text}` rendered as **Title.** rules body (dense adjudication; rarity `S{}` scaling preserved)
+5. **Lore** — then `(Homebrew)`
 
 - **Scrolls** — single-use spell-ish effects scaled by rarity (cantrip → high-level feel); homebrew names OK  
 - **Potions** — clearer combat/utility quaffs  
