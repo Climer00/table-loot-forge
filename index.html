@@ -50,16 +50,20 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(9
 .loot-card.r-rare .item-name{color:#8ec4ff}
 .loot-card.r-veryrare .item-name{color:#d0b0ff}
 .loot-card.r-uncommon .item-name{color:#9de0b0}
+.category-line{margin:0 0 10px;font-size:.88rem;font-style:italic;color:var(--muted);line-height:1.35}
 .meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .chip{font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.28);border:1px solid var(--border);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.chip.rarity{color:var(--ember);border-color:rgba(255,107,53,.4)}.chip.slot{color:var(--teal);border-color:rgba(61,205,184,.35)}
 .chip.attune{color:#ffb86b;border-color:rgba(255,184,107,.4)}
 .card-block{margin-bottom:12px}
 .card-block:last-of-type{margin-bottom:0}
-.block-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 6px}
-.mechanics{margin:0;font-size:.95rem;line-height:1.4;background:rgba(0,0,0,.22);border:1px solid rgba(255,107,53,.22);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
 .look{margin:0;font-size:.9rem;line-height:1.45;color:var(--ink);background:rgba(0,0,0,.18);border:1px solid rgba(61,205,184,.2);border-left:3px solid var(--teal);padding:10px 12px;border-radius:0 8px 8px 0}
+.props-block{background:rgba(0,0,0,.22);border:1px solid rgba(255,107,53,.22);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
+.prop{margin:0 0 10px;font-size:.95rem;line-height:1.4}
+.prop:last-child{margin-bottom:0}
+.prop-title{color:var(--copper);font-weight:800}
+.prop-titles{margin:0;font-size:.82rem;color:var(--muted);font-weight:650}
 .lore{margin:0;font-size:.88rem;color:var(--muted);font-style:italic;background:rgba(0,0,0,.15);border-top:1px dashed rgba(212,165,116,.25);padding:10px 4px 2px}
+.lore-label{font-style:normal;font-weight:700;color:var(--copper);letter-spacing:.02em}
 .hist-card .look{display:none}
 .card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(212,165,116,.15)}
 .action-btn{appearance:none;border:1px solid rgba(107,124,147,.4);background:var(--bg2);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.82rem;font-weight:700;cursor:pointer;min-height:44px;flex:1 1 auto}
@@ -75,7 +79,7 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(9
 .hist-card:active{transform:scale(.985)}
 .hist-card .loot-card-inner{padding:12px 14px}
 .hist-card .item-name{font-size:1rem}
-.hist-card .mechanics{font-size:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hist-card .prop-titles{font-size:.8rem}
 .hist-card .lore{display:none}
 .hist-card .card-actions{margin-top:10px;padding-top:10px}
 .hist-hint{font-size:.7rem;color:var(--muted);margin:0 0 8px}
@@ -90,7 +94,7 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 <header>
   <div class="brand">DM Tool</div>
   <h1>Table Loot Forge</h1>
-  <p class="tagline">Rarity → type → Create. One table-ready item — look, mechanics, lore.</p>
+  <p class="tagline">Rarity → type → Create. Beyond/DMG-style card — category, look, named properties, lore.</p>
   <span class="homebrew">5e-flavored homebrew</span>
 </header>
 <section class="panel"><label class="sec">1. Rarity</label><div class="grid" id="rarities"></div></section>
@@ -109,9 +113,9 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 </section>
 <footer>Table Loot Forge · adjudication-simple homebrew<br/>Not affiliated with Wizards of the Coast</footer>
 <div class="toast" id="toast" role="status"></div>
-<script src="loot-flavor.js?v=rich1"></script>
-<script src="loot-mech.js?v=rich1"></script>
-<script src="loot-consumables.js?v=rich1"></script>
-<script src="loot.js?v=rich1"></script>
+<script src="loot-flavor.js?v=format1"></script>
+<script src="loot-mech.js?v=format1"></script>
+<script src="loot-consumables.js?v=format1"></script>
+<script src="loot.js?v=format1"></script>
 </body>
 </html>
