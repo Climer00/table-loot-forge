@@ -17,6 +17,8 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(9
 .homebrew{display:inline-block;margin-top:8px;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);border:1px solid rgba(61,205,184,.35);padding:3px 10px;border-radius:4px}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 .sec{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--copper);margin-bottom:10px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.sec-row .sec{margin-bottom:0}
 .grid{display:flex;flex-wrap:wrap;gap:8px}
 .btn{appearance:none;border:2px solid rgba(107,124,147,.35);background:var(--bg2);color:var(--ink);border-radius:10px;padding:11px 14px;font-size:.88rem;font-weight:650;cursor:pointer;min-height:48px;flex:1 1 auto}
 .btn:active{transform:scale(.97)}
@@ -29,19 +31,57 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(9
 #create:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #8a3010}
 #create:disabled{opacity:.4;cursor:not-allowed;background:linear-gradient(180deg,#555,#3a3a3a);color:#aaa;box-shadow:0 4px 0 #222}
 .hint{text-align:center;font-size:.75rem;color:var(--muted);margin:8px 0 12px}
-.result{min-height:180px}
+.result{min-height:0;padding:0;background:transparent;border:none;box-shadow:none}
+.result.empty{min-height:120px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,.25);padding:14px}
 .result.empty .placeholder{color:var(--muted);text-align:center;padding:36px 12px;margin:0}
-.result.flash{animation:forge .4s ease-out}
-@keyframes forge{0%{transform:scale(.97);box-shadow:0 0 24px rgba(255,107,53,.35)}100%{transform:scale(1)}}
-.item-name{font-size:1.22rem;font-weight:800;margin:0 0 10px;color:var(--copper)}
+.result.flash .loot-card{animation:forge .4s ease-out}
+@keyframes forge{0%{transform:scale(.97);box-shadow:0 0 28px rgba(255,107,53,.4)}100%{transform:scale(1)}}
+.loot-card{position:relative;background:linear-gradient(165deg,#2a3340 0%,#1e2530 55%,#1a2028 100%);border:2px solid rgba(212,165,116,.45);border-radius:14px;padding:0;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);margin-bottom:12px}
+.loot-card::before{content:"";position:absolute;inset:6px;border:1px solid rgba(212,165,116,.2);border-radius:10px;pointer-events:none;z-index:0}
+.loot-card-inner{position:relative;z-index:1;padding:16px 16px 14px}
+.loot-card.r-common{border-color:rgba(154,165,181,.55);box-shadow:0 6px 20px rgba(0,0,0,.35),0 0 0 1px rgba(154,165,181,.12)}
+.loot-card.r-uncommon{border-color:rgba(92,184,122,.55);box-shadow:0 6px 20px rgba(0,0,0,.35),0 0 18px rgba(92,184,122,.12)}
+.loot-card.r-rare{border-color:rgba(74,159,255,.55);box-shadow:0 6px 20px rgba(0,0,0,.35),0 0 18px rgba(74,159,255,.14)}
+.loot-card.r-veryrare{border-color:rgba(181,122,255,.55);box-shadow:0 6px 20px rgba(0,0,0,.35),0 0 18px rgba(181,122,255,.14)}
+.loot-card.r-legendary{border-color:rgba(255,176,32,.65);box-shadow:0 6px 20px rgba(0,0,0,.35),0 0 22px rgba(255,176,32,.18)}
+.loot-card .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.loot-card .item-name{font-size:1.18rem;font-weight:800;margin:0;color:var(--copper);letter-spacing:.01em;line-height:1.25;flex:1}
+.loot-card.r-legendary .item-name{color:#ffc14d}
+.loot-card.r-rare .item-name{color:#8ec4ff}
+.loot-card.r-veryrare .item-name{color:#d0b0ff}
+.loot-card.r-uncommon .item-name{color:#9de0b0}
 .meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.chip{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--bg2);border:1px solid var(--border);color:var(--muted);text-transform:uppercase}
+.chip{font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.28);border:1px solid var(--border);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .chip.rarity{color:var(--ember);border-color:rgba(255,107,53,.4)}.chip.slot{color:var(--teal);border-color:rgba(61,205,184,.35)}
 .chip.attune{color:#ffb86b;border-color:rgba(255,184,107,.4)}
-.block-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 4px}
-.mechanics{margin:0 0 14px;font-size:.98rem;background:var(--bg2);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
-.lore{margin:0;font-size:.9rem;color:var(--muted);font-style:italic;border-top:1px solid var(--border);padding-top:12px}
+.card-block{margin-bottom:12px}
+.card-block:last-of-type{margin-bottom:0}
+.block-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 6px}
+.mechanics{margin:0;font-size:.95rem;line-height:1.4;background:rgba(0,0,0,.22);border:1px solid rgba(255,107,53,.22);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
+.lore{margin:0;font-size:.88rem;color:var(--muted);font-style:italic;background:rgba(0,0,0,.15);border-top:1px dashed rgba(212,165,116,.25);padding:10px 4px 2px}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(212,165,116,.15)}
+.action-btn{appearance:none;border:1px solid rgba(107,124,147,.4);background:var(--bg2);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.82rem;font-weight:700;cursor:pointer;min-height:44px;flex:1 1 auto}
+.action-btn.primary{border-color:rgba(61,205,184,.45);color:var(--teal)}
+.action-btn:active{transform:scale(.97)}
+.action-btn.copied{border-color:rgba(92,184,122,.6);color:#9de0b0}
+.sms-link{display:none;text-align:center;font-size:.78rem;color:var(--teal);margin-top:8px;text-decoration:none}
+.sms-link.show{display:block}
+.history-panel{margin-top:4px}
+.history-empty{color:var(--muted);font-size:.85rem;text-align:center;margin:8px 0 0;padding:8px}
+.hist-list{display:flex;flex-direction:column;gap:10px}
+.hist-card{cursor:pointer;margin-bottom:0;transition:border-color .15s,transform .1s}
+.hist-card:active{transform:scale(.985)}
+.hist-card .loot-card-inner{padding:12px 14px}
+.hist-card .item-name{font-size:1rem}
+.hist-card .mechanics{font-size:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hist-card .lore{display:none}
+.hist-card .card-actions{margin-top:10px;padding-top:10px}
+.hist-hint{font-size:.7rem;color:var(--muted);margin:0 0 8px}
+.linkish{appearance:none;border:none;background:transparent;color:var(--muted);font-size:.75rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:6px 4px;min-height:36px}
+.linkish:hover{color:var(--ember)}
 footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line-height:1.5}
+.toast{position:fixed;left:50%;bottom:calc(20px + var(--sb));transform:translateX(-50%) translateY(120%);background:#1e2834;border:1px solid rgba(61,205,184,.4);color:var(--ink);padding:10px 18px;border-radius:10px;font-size:.85rem;font-weight:650;z-index:50;opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
 </head>
 <body>
@@ -56,7 +96,17 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 <button id="create" type="button" disabled>Create</button>
 <p class="hint" id="hint">Pick a rarity and a type</p>
 <section class="panel result empty" id="result" aria-live="polite"><p class="placeholder">Your forged item lands here.</p></section>
+<section class="panel history-panel" id="history-panel">
+  <div class="sec-row">
+    <label class="sec">History</label>
+    <button type="button" class="linkish" id="clear-history" hidden>Clear history</button>
+  </div>
+  <p class="hist-hint" id="hist-hint">Last ~30 creates · tap to show again</p>
+  <div class="hist-list" id="history"></div>
+  <p class="history-empty" id="history-empty">No items yet — Create something first.</p>
+</section>
 <footer>Table Loot Forge · adjudication-simple homebrew<br/>Not affiliated with Wizards of the Coast</footer>
-<script src="loot.js"></script>
+<div class="toast" id="toast" role="status"></div>
+<script src="loot.js?v=cards1"></script>
 </body>
 </html>
