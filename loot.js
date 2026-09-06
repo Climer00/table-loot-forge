@@ -53,11 +53,32 @@ function normalizeProperties(item){
 function propsKey(item){
   return normalizeProperties(item).map(p=>(p.title||"")+":"+(p.text||"")).join("|");
 }
+const RECENT_FX_KEY="tlf-recent-fx-v1",RECENT_FX_MAX=40,REROLL_MAX=12;
+function effectSig(item){
+  if(item.effectId)return item.effectId;
+  if(item.type==="Scroll"||item.type==="Potion"||item.type==="Tincture"){
+    let n=String(item.name||"");
+    n=n.replace(/^Potion of \S+ /,\"Potion:\");
+    n=n.replace(/^Tincture of \S+ /,\"Tincture:\");
+    n=n.replace(/^Scroll of /,\"Scroll:\");
+    return n;
+  }
+  const titles=normalizeProperties(item).map(p=>p.title||"").filter(Boolean).join("|");
+  return (item.type||"")+":"+titles;
+}
+function loadRecentFx(){try{const a=JSON.parse(localStorage.getItem(RECENT_FX_KEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return[];}}
+function saveRecentFx(a){try{localStorage.setItem(RECENT_FX_KEY,JSON.stringify(a.slice(0,RECENT_FX_MAX)));}catch(e){}}
+function pushRecentFx(sig){
+  if(!sig)return;
+  const n=[sig].concat(loadRecentFx().filter(x=>x!==sig)).slice(0,RECENT_FX_MAX);
+  saveRecentFx(n);
+}
+function isRecentFx(sig){return !!sig&&loadRecentFx().indexOf(sig)!==-1;}
 const gearFx=typeof TLF_gearFx!=="undefined"?TLF_gearFx:function(){return{properties:[{title:"Error",text:"Missing loot-mech.js"}],attune:false};};
 const scrollItem=typeof TLF_scrollItem!=="undefined"?TLF_scrollItem:function(){return{name:"Scroll",slot:"Scroll",attune:false,properties:[]};};
 const potionItem=typeof TLF_potionItem!=="undefined"?TLF_potionItem:function(){return{name:"Potion",slot:"Potion",attune:false,properties:[]};};
 const tinctureItem=typeof TLF_tinctureItem!=="undefined"?TLF_tinctureItem:function(){return{name:"Tincture",slot:"Tincture",attune:false,properties:[]};};
-function generate(rarity,type){
+function generateOnce(rarity,type){
   const s=S[rarity];
   let item;
   if(type==="Scroll")item=scrollItem(rarity,s);
@@ -69,7 +90,19 @@ function generate(rarity,type){
   }
   const attune=!!item.attune;
   const properties=item.properties||[];
-  return{name:item.name,rarity,type,slot:item.slot,category:categoryOf(type,rarity,attune),properties,description:lookOf(type),lore:composeLore(type,rarity),attune};
+  const out={name:item.name,rarity,type,slot:item.slot,category:categoryOf(type,rarity,attune),properties,description:lookOf(type),lore:composeLore(type,rarity),attune};
+  if(item.effectId)out.effectId=item.effectId;
+  return out;
+}
+function generate(rarity,type){
+  let item=generateOnce(rarity,type),sig=effectSig(item),tries=0;
+  while(isRecentFx(sig)&&tries<REROLL_MAX){
+    item=generateOnce(rarity,type);
+    sig=effectSig(item);
+    tries++;
+  }
+  pushRecentFx(sig);
+  return item;
 }
 const HISTORY_KEY="tlf-history-v1",HISTORY_MAX=30;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
