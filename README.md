@@ -1,6 +1,6 @@
 # Table Loot Forge
 
-On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs. Pick a rarity, pick a type/slot, tap **Create** — get one table-ready **loot card** with mechanics and a short lore blurb.
+On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs. Pick a rarity, pick a type/slot, tap **Create** — get one table-ready **loot card** with a sensory **Description**, denser table-ready **mechanics**, and **2–3 sentences of lore**.
 
 Built for mid-session speed: big tap targets, phone-first, adjudication-simple. Effects are familiar in shape (rarities, slots, DCs, dice) but freer than official items — everything is labeled **homebrew**.
 
@@ -18,7 +18,7 @@ UI is a charcoal/ember **loot forge** (not purple mystical) — quick DM drops m
 1. Select a **Rarity** — Common, Uncommon, Rare, Very Rare, Legendary  
 2. Select a **Type** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, Tincture  
 3. Tap **Create** (enabled only when both are selected)  
-4. Read the **loot card**: name, rarity/type chips, **table-ready mechanics**, and a **short lore** line  
+4. Read the **loot card**: name, rarity/type chips, **Description** (look/feel), **table-ready mechanics**, and **lore** (2–3 sentences)  
 
 Tap Create again anytime for another roll with the same filters.
 
@@ -39,6 +39,7 @@ Plain text looks like:
 ```
 ⚔️ NAME
 Rarity · Type
+Description: ...
 Mechanics: ...
 Lore: ...
 (Homebrew)
@@ -50,6 +51,13 @@ Lore: ...
 - **Potions** — clearer combat/utility quaffs  
 - **Tinctures** — lighter, shorter herbal-alchemical sips  
 - **Gear** — lasting magic items for the chosen slot; power (DC, dice, uses, attunement) scales with rarity  
+
+
+## How items are created
+
+This is **not** a fixed list of finished magic items. On Create, the app randomly combines curated template tables (rarity stat bands, type templates, name lists, description/lore fragments). For a plain-language walkthrough aimed at DMs and followers, see:
+
+**[docs/HOW-ITEMS-ARE-CREATED.md](docs/HOW-ITEMS-ARE-CREATED.md)** — *How Items Are Created in Table Loot Forge*
 
 ## Share intent
 
