@@ -1,8 +1,3 @@
-document.write('<script src="loot-kits-r-common-1.js?v=ac-var1"><\/script>');
-document.write('<script src="loot-kits-r-common-2.js?v=ac-var1"><\/script>');
-document.write('<script src="loot-kits-r-common-2t.js?v=ac-var1"><\/script>');
-document.write('<script src="loot-kits-r-uncommon-2t.js?v=ac-var1"><\/script>');
-document.write('<script src="loot-kits-r-uncommon-3t.js?v=ac-var1"><\/script>');
 /* Table Loot Forge — gear mechanics (named properties) */
 (function(g){
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -25,6 +20,20 @@ function tidyZeroBonus(t){
   return t;
 }
 function fillProps(props,m){return props.map(p=>({title:p.title,text:tidyZeroBonus(fill(p.text,m))}));}
+function isStubKit(kit){
+  if(!kit||!kit.length)return true;
+  return kit.some(function(p){
+    const t=String(p.title||"");
+    const x=String(p.text||"");
+    if(/^(C|U|R|V|L)\d/i.test(t))return true;
+    if(/^C0\d/i.test(t))return true;
+    if(/^Fx\d/i.test(t))return true;
+    if(/\b(Wea|Arm|Shi|Hel|Clo|Nec|Rin|Glo|Bel|Boo)$/.test(t))return true;
+    if(/Useful \w+ magic while worn/i.test(x))return true;
+    if(/Wondrous \w+\. Useful magic/i.test(x))return true;
+    return false;
+  });
+}
 function poolFor(type,r){
   const base=g.TLF_GEAR_KITS||{};
   const byR=g.TLF_GEAR_KITS_R||{};
@@ -34,18 +43,17 @@ function poolFor(type,r){
     const arr=((byR[rr]||{})[type])||[];
     pool=pool.concat(arr);
   });
+  pool=pool.filter(function(k){return !isStubKit(k);});
   if(!pool.length) pool=[[{title:"Error",text:"Missing kits for "+type}]];
   return pool;
 }
 function gearFx(type,r,s){
   const t=pick(DMG),sk=pick(SK),sv=pick(SV),{dc,d,D,u}=s;
-  // Magical armor/shields always add AC — even Common (floor +1)
   let b=s.b||0;
   if(type==="Armor"||type==="Shield") b=Math.max(b,1);
   const str={Common:13,Uncommon:15,Rare:17,"Very Rare":19,Legendary:21}[r];
   const m={b:b,d,D,t,dc,u,sk,sv,str};
   const pool=poolFor(type,r);
-  // Legacy VR/Legendary weapon burst still available as extra option in pool
   if(type==="Weapon"&&(r==="Very Rare"||r==="Legendary")&&Math.random()<0.08){
     pool.push([{title:"Cataclysm Edge",text:"You gain a +{b} bonus to attack rolls and damage rolls with this weapon."},{title:"Cone Burst",text:"Action ({u}): unleash a 30-foot cone of {t}. Each creature in the cone must make a DC {dc} Dexterity saving throw. On a failed save, a creature takes {D} {t} damage; on a successful save, half as much."}]);
   }
