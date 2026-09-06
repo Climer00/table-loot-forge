@@ -26,8 +26,13 @@ loot-kits-h.js          # Helmet
 loot-kits-cn.js         # Cloak + Necklace
 loot-kits-3.js          # Ring + Gloves
 loot-kits-4.js          # Belt + Boots
-loot-kits-extra.js      # +10 kits per gear slot
-loot-potions.js         # Potions + tinctures
+loot-kits-extra.js      # +10 kits per gear slot (shared base)
+loot-kits-r-common.js   # Common-tagged kit expansions
+loot-kits-r-uncommon.js # Uncommon-tagged expansions
+loot-kits-r-rare.js     # Rare-tagged expansions
+loot-kits-r-vr.js       # Very Rare-tagged expansions
+loot-kits-r-leg.js      # Legendary-tagged expansions
+loot-potions.js         # Potions + tinctures (≥35 each)
 loot-scrolls-a1.js      # cantrip + 1st–2nd pools
 loot-scrolls-a2.js      # 3rd–4th pools
 loot-scrolls-a.js       # shim (load order)
@@ -36,7 +41,7 @@ loot-scrolls.js         # scroll picker
 loot-consumables.js     # load-order check
 ```
 
-Scripts are cache-busted in `index.html` (`?v=variety2`). After a code change, bump that query if a phone or raw.githack tab is still serving an old copy.
+Scripts are cache-busted in `index.html` (`?v=ac-var1`). After a code change, bump that query if a phone or raw.githack tab is still serving an old copy.
 
 ## How to use
 
@@ -95,9 +100,9 @@ Cards follow a compact DMG/D&D Beyond–style stack:
 
 ### Variety pools + anti-repeat
 
-Property kits and consumable tables are intentionally large (roughly **30 kits per gear type**; **~20 potions**, **~20 tinctures**, **~12 scrolls per spell-tier band**) so Create rolls feel distinct.
+Property kits and consumable tables are intentionally large (**shared ~30 kits + per-rarity expansions → typically 60–75 kits available per gear type per rarity**; **≥35 potions**, **≥35 tinctures**, **≥20 scrolls per spell-tier band**) so Create rolls feel distinct.
 
-The forge also keeps a **session/localStorage ring of the last ~40 effect signatures** and **re-rolls up to ~12 times** when a freshly picked kit/effect was used recently — eventual repeats are still allowed if pools are exhausted.
+The forge also keeps a **session/localStorage ring of the last ~60 effect signatures** and **re-rolls up to ~12 times** when a freshly picked kit/effect was used recently — eventual repeats are still allowed if pools are exhausted.
 
 ### Rarity stat bands
 
@@ -105,11 +110,22 @@ Rarity is a label **and** a number band used to fill `{b}`, `{dc}`, `{d}`, `{D}`
 
 | Rarity | Bonus | DC | Small / big dice | Uses | Attune chance | Scroll feel |
 | --- | --- | --- | --- | --- | --- | --- |
-| Common | +0 | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
+| Common | +0† | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
 | Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | ~35% | 1st–2nd |
 | Rare | +1 | 15 | 2d6 / 3d6 | 2/day | ~75% | 3rd–4th |
 | Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | ~90% | 5th–6th |
 | Legendary | +3 | 18 | 4d6 / 6d8 | at will | always | 7th–9th |
+
+† **Armor/Shield floor:** magical Armor and Shields always gain at least **+1 AC** even at Common (where the general bonus band is +0). Other gear may still show “no bonus” when `{b}` is 0.
+
+## Per-rarity variety
+
+Gear no longer draws from a single ~30-kit pool for every rarity. Each Create uses:
+
+- **Shared base kits** (all rarities) from `loot-kits-*.js` + `loot-kits-extra.js`
+- **Rarity-tagged expansions** from `loot-kits-r-*.js` for the selected rarity **and adjacent** bands
+
+Target: **≥40 distinct kits available per gear type** when a given rarity is selected (shared + tagged). Names, looks, and lore pools are also expanded so the same kit still feels different.
 
 ## How items are created
 
