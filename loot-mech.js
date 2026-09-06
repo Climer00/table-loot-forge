@@ -7,7 +7,12 @@ function attune(r,s){if(chance(s.a))return true;if(["Rare","Very Rare","Legendar
 const DMG="fire cold lightning thunder acid poison necrotic radiant force psychic".split(" ");
 const SK="Stealth Athletics Acrobatics Perception Insight Survival Intimidation Persuasion Arcana".split(" ");
 const SV="Strength Dexterity Constitution Intelligence Wisdom Charisma".split(" ");
-function fillProps(props,m){return props.map(p=>({title:p.title,text:fill(p.text,m).replace(/\+0 /g,"no bonus ")}));}
+function tidyZeroBonus(t){
+  t=t.replace(/an?\s+\+0\s+bonus/gi,"no bonus");
+  t=t.replace(/\+0\s+bonus/gi,"no bonus");
+  return t;
+}
+function fillProps(props,m){return props.map(p=>({title:p.title,text:tidyZeroBonus(fill(p.text,m))}));}
 function gearFx(type,r,s){
   const t=pick(DMG),sk=pick(SK),sv=pick(SV),{b,dc,d,D,u}=s;
   const str={Common:13,Uncommon:15,Rare:17,"Very Rare":19,Legendary:21}[r];
