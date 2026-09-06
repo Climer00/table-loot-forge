@@ -26,6 +26,7 @@ loot-kits-h.js          # Helmet
 loot-kits-cn.js         # Cloak + Necklace
 loot-kits-3.js          # Ring + Gloves
 loot-kits-4.js          # Belt + Boots
+loot-kits-extra.js      # +10 kits per gear slot
 loot-potions.js         # Potions + tinctures
 loot-scrolls-a1.js      # cantrip + 1st–2nd pools
 loot-scrolls-a2.js      # 3rd–4th pools
@@ -35,7 +36,7 @@ loot-scrolls.js         # scroll picker
 loot-consumables.js     # load-order check
 ```
 
-Scripts are cache-busted in `index.html` (`?v=variety1`). After a code change, bump that query if a phone or raw.githack tab is still serving an old copy.
+Scripts are cache-busted in `index.html` (`?v=variety2`). After a code change, bump that query if a phone or raw.githack tab is still serving an old copy.
 
 ## How to use
 
@@ -94,7 +95,7 @@ Cards follow a compact DMG/D&D Beyond–style stack:
 
 ### Variety pools + anti-repeat
 
-Property kits and consumable tables are intentionally large (roughly **20 kits per gear type**; **~20 potions**, **~20 tinctures**, **~12 scrolls per spell-tier band**) so Create rolls feel distinct.
+Property kits and consumable tables are intentionally large (roughly **30 kits per gear type**; **~20 potions**, **~20 tinctures**, **~12 scrolls per spell-tier band**) so Create rolls feel distinct.
 
 The forge also keeps a **session/localStorage ring of the last ~40 effect signatures** and **re-rolls up to ~12 times** when a freshly picked kit/effect was used recently — eventual repeats are still allowed if pools are exhausted.
 
@@ -119,6 +120,7 @@ This is **not** a fixed list of finished magic items. On Create, the app randoml
 | `loot.js` | Rarity bands, names, category line, look/lore assembly, history, share/copy, anti-repeat |
 | `loot-flavor.js` | Look paragraphs + lore fragments |
 | `loot-kits-*.js` | Named property kits per gear slot |
+| `loot-kits-extra.js` | Extra kits appended onto every gear slot |
 | `loot-mech.js` | Picks a kit, fills placeholders, rolls attunement |
 | `loot-potions.js` | Potion + tincture pools |
 | `loot-scrolls-*.js` | Scroll pools by tier + picker |
