@@ -58,7 +58,9 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(9
 .card-block:last-of-type{margin-bottom:0}
 .block-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 6px}
 .mechanics{margin:0;font-size:.95rem;line-height:1.4;background:rgba(0,0,0,.22);border:1px solid rgba(255,107,53,.22);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
+.look{margin:0;font-size:.9rem;line-height:1.45;color:var(--ink);background:rgba(0,0,0,.18);border:1px solid rgba(61,205,184,.2);border-left:3px solid var(--teal);padding:10px 12px;border-radius:0 8px 8px 0}
 .lore{margin:0;font-size:.88rem;color:var(--muted);font-style:italic;background:rgba(0,0,0,.15);border-top:1px dashed rgba(212,165,116,.25);padding:10px 4px 2px}
+.hist-card .look{display:none}
 .card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(212,165,116,.15)}
 .action-btn{appearance:none;border:1px solid rgba(107,124,147,.4);background:var(--bg2);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.82rem;font-weight:700;cursor:pointer;min-height:44px;flex:1 1 auto}
 .action-btn.primary{border-color:rgba(61,205,184,.45);color:var(--teal)}
@@ -88,7 +90,7 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 <header>
   <div class="brand">DM Tool</div>
   <h1>Table Loot Forge</h1>
-  <p class="tagline">Rarity → type → Create. One table-ready item.</p>
+  <p class="tagline">Rarity → type → Create. One table-ready item — look, mechanics, lore.</p>
   <span class="homebrew">5e-flavored homebrew</span>
 </header>
 <section class="panel"><label class="sec">1. Rarity</label><div class="grid" id="rarities"></div></section>
@@ -107,6 +109,6 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 </section>
 <footer>Table Loot Forge · adjudication-simple homebrew<br/>Not affiliated with Wizards of the Coast</footer>
 <div class="toast" id="toast" role="status"></div>
-<script src="loot.js?v=cards1"></script>
+<script src="loot.js?v=rich1"></script>
 </body>
 </html>
