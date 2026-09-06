@@ -1,8 +1,25 @@
 /* Table Loot Forge — gear mechanics (named properties) */
+(function(){
+  var packs=[
+    "loot-kits-pack-weapon-1.js","loot-kits-pack-weapon-2.js","loot-kits-pack-weapon-3.js",
+    "loot-kits-pack-armor-1.js","loot-kits-pack-armor-2.js","loot-kits-pack-armor-3.js",
+    "loot-kits-pack-shield-1.js","loot-kits-pack-shield-2.js","loot-kits-pack-shield-3.js",
+    "loot-kits-pack-helmet-1.js","loot-kits-pack-helmet-2.js","loot-kits-pack-helmet-3.js",
+    "loot-kits-pack-cloak-1.js","loot-kits-pack-cloak-2.js","loot-kits-pack-cloak-3.js",
+    "loot-kits-pack-necklace-1.js","loot-kits-pack-necklace-2.js","loot-kits-pack-necklace-3.js",
+    "loot-kits-pack-ring-1.js","loot-kits-pack-ring-2.js","loot-kits-pack-ring-3.js",
+    "loot-kits-pack-gloves-1.js","loot-kits-pack-gloves-2.js","loot-kits-pack-gloves-3.js",
+    "loot-kits-pack-belt-1.js","loot-kits-pack-belt-2.js","loot-kits-pack-belt-3.js",
+    "loot-kits-pack-boots-1.js","loot-kits-pack-boots-2.js","loot-kits-pack-boots-3.js"
+  ];
+  for(var i=0;i<packs.length;i++){
+    document.write('<script src="'+packs[i]+'?v=kits100b"><\\/script>');
+  }
+})();
 (function(g){
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const chance=p=>Math.random()<p;
-const fill=(t,m)=>t.replace(/\{(\w+)\}/g,(_,k)=>m[k]!=null?m[k]:"{"+k+"}");
+const fill=(t,m)=>t.replace(/\\{(\w+)\\}/g,(_,k)=>m[k]!=null?m[k]:"{"+k+"}");
 function attune(r,s){if(chance(s.a))return true;if(["Rare","Very Rare","Legendary"].includes(r)&&chance(.4))return true;return false;}
 const DMG="fire cold lightning thunder acid poison necrotic radiant force psychic".split(" ");
 const SK="Stealth Athletics Acrobatics Perception Insight Survival Intimidation Persuasion Arcana".split(" ");
@@ -15,8 +32,8 @@ const RARITY_ADJ={
   Legendary:["Very Rare","Legendary"]
 };
 function tidyZeroBonus(t){
-  t=t.replace(/an?\s+\+0\s+bonus/gi,"no bonus");
-  t=t.replace(/\+0\s+bonus/gi,"no bonus");
+  t=t.replace(/an?\\s+\\+0\\s+bonus/gi,"no bonus");
+  t=t.replace(/\\+0\\s+bonus/gi,"no bonus");
   return t;
 }
 function fillProps(props,m){return props.map(p=>({title:p.title,text:tidyZeroBonus(fill(p.text,m))}));}
@@ -25,12 +42,12 @@ function isStubKit(kit){
   return kit.some(function(p){
     const t=String(p.title||"");
     const x=String(p.text||"");
-    if(/^(C|U|R|V|L)\d/i.test(t))return true;
-    if(/^C0\d/i.test(t))return true;
-    if(/^Fx\d/i.test(t))return true;
-    if(/\b(Wea|Arm|Shi|Hel|Clo|Nec|Rin|Glo|Bel|Boo)$/.test(t))return true;
-    if(/Useful \w+ magic while worn/i.test(x))return true;
-    if(/Wondrous \w+\. Useful magic/i.test(x))return true;
+    if(/^(C|U|R|V|L)\\d/i.test(t))return true;
+    if(/^C0\\d/i.test(t))return true;
+    if(/^Fx\\d/i.test(t))return true;
+    if(/\\b(Wea|Arm|Shi|Hel|Clo|Nec|Rin|Glo|Bel|Boo)$/.test(t))return true;
+    if(/Useful \\w+ magic while worn/i.test(x))return true;
+    if(/Wondrous \\w+\\. Useful magic/i.test(x))return true;
     return false;
   });
 }
