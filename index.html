@@ -1,1 +1,62 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Table Loot Forge</title></head><body><p>Loading forge…</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#12151a"/>
+<title>Table Loot Forge</title>
+<style>
+:root{--bg:#12151a;--bg2:#1a1f27;--card:#222933;--ink:#e8edf2;--muted:#8b97a8;--ember:#ff6b35;--copper:#d4a574;--teal:#3dcdb8;--steel:#6b7c93;--border:rgba(212,165,116,.18);--radius:12px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;line-height:1.45;min-height:100%}
+body{padding:calc(12px + var(--st)) 14px calc(24px + var(--sb));max-width:440px;margin:0 auto;background:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(255,107,53,.12),transparent 55%),linear-gradient(180deg,#161a20 0%,var(--bg) 40%)}
+header{text-align:center;margin-bottom:14px}
+.brand{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:6px}
+h1{font-size:1.45rem;margin:0 0 4px;font-weight:800;background:linear-gradient(90deg,var(--copper),var(--ember));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{margin:0;color:var(--muted);font-size:.84rem}
+.homebrew{display:inline-block;margin-top:8px;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);border:1px solid rgba(61,205,184,.35);padding:3px 10px;border-radius:4px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.sec{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--copper);margin-bottom:10px}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.btn{appearance:none;border:2px solid rgba(107,124,147,.35);background:var(--bg2);color:var(--ink);border-radius:10px;padding:11px 14px;font-size:.88rem;font-weight:650;cursor:pointer;min-height:48px;flex:1 1 auto}
+.btn:active{transform:scale(.97)}
+.btn.active{border-color:var(--ember);color:#fff;background:linear-gradient(180deg,#3a2818,#2a1e14)}
+.btn.type.active{border-color:var(--teal);background:linear-gradient(180deg,#1a3330,#152826)}
+.rarity-common.active{border-color:#9aa5b5}.rarity-uncommon.active{border-color:#5cb87a;color:#b8f0c8}
+.rarity-rare.active{border-color:#4a9fff;color:#b8d8ff}.rarity-veryrare.active{border-color:#b57aff;color:#e0c8ff}
+.rarity-legendary.active{border-color:#ffb020;color:#ffe0a0}
+#create{width:100%;appearance:none;border:none;border-radius:14px;min-height:60px;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:#1a1008;background:linear-gradient(180deg,#ff9a5c 0%,var(--ember) 45%,#c44a18 100%);box-shadow:0 5px 0 #8a3010,0 10px 28px rgba(255,107,53,.28);margin-top:4px}
+#create:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #8a3010}
+#create:disabled{opacity:.4;cursor:not-allowed;background:linear-gradient(180deg,#555,#3a3a3a);color:#aaa;box-shadow:0 4px 0 #222}
+.hint{text-align:center;font-size:.75rem;color:var(--muted);margin:8px 0 12px}
+.result{min-height:180px}
+.result.empty .placeholder{color:var(--muted);text-align:center;padding:36px 12px;margin:0}
+.result.flash{animation:forge .4s ease-out}
+@keyframes forge{0%{transform:scale(.97);box-shadow:0 0 24px rgba(255,107,53,.35)}100%{transform:scale(1)}}
+.item-name{font-size:1.22rem;font-weight:800;margin:0 0 10px;color:var(--copper)}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--bg2);border:1px solid var(--border);color:var(--muted);text-transform:uppercase}
+.chip.rarity{color:var(--ember);border-color:rgba(255,107,53,.4)}.chip.slot{color:var(--teal);border-color:rgba(61,205,184,.35)}
+.chip.attune{color:#ffb86b;border-color:rgba(255,184,107,.4)}
+.block-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 4px}
+.mechanics{margin:0 0 14px;font-size:.98rem;background:var(--bg2);border-left:3px solid var(--ember);padding:10px 12px;border-radius:0 8px 8px 0}
+.lore{margin:0;font-size:.9rem;color:var(--muted);font-style:italic;border-top:1px solid var(--border);padding-top:12px}
+footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">DM Tool</div>
+  <h1>Table Loot Forge</h1>
+  <p class="tagline">Rarity → type → Create. One table-ready item.</p>
+  <span class="homebrew">5e-flavored homebrew</span>
+</header>
+<section class="panel"><label class="sec">1. Rarity</label><div class="grid" id="rarities"></div></section>
+<section class="panel"><label class="sec">2. Type / Slot</label><div class="grid" id="types"></div></section>
+<button id="create" type="button" disabled>Create</button>
+<p class="hint" id="hint">Pick a rarity and a type</p>
+<section class="panel result empty" id="result" aria-live="polite"><p class="placeholder">Your forged item lands here.</p></section>
+<footer>Table Loot Forge · adjudication-simple homebrew<br/>Not affiliated with Wizards of the Coast</footer>
+<script src="loot.js"></script>
+</body>
+</html>
