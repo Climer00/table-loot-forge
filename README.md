@@ -11,7 +11,7 @@ UI is a charcoal/ember **loot forge** (not purple mystical) — quick DM drops m
 - **Repo:** https://github.com/Climer00/table-loot-forge
 - **Live (main):** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
 - **Pinned (best share):** `https://raw.githack.com/Climer00/table-loot-forge/<commitSha>/index.html`
-- Clone/download and open `index.html` in a browser (zero build). Keep `loot.js` next to it if opening as local files.
+- Clone/download and open `index.html` in a browser (zero build). Keep `loot-flavor.js`, `loot-mech.js`, `loot-consumables.js`, and `loot.js` next to it if opening as local files.
 
 ## How to use
 

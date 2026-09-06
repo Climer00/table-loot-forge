@@ -21,7 +21,7 @@ You always pick two things before Create works:
 1. **Rarity** — Common, Uncommon, Rare, Very Rare, or Legendary  
 2. **Type / slot** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, or Tincture  
 
-Those choices are fixed for that roll. Everything else is rolled from tables inside `loot.js`.
+Those choices are fixed for that roll. Everything else is rolled from curated tables: description/lore in `loot-flavor.js`, gear templates in `loot-mech.js`, scroll/potion/tincture templates in `loot-consumables.js`, and assembly/UI in `loot.js`.
 
 ---
 
