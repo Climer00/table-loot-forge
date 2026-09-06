@@ -1,3 +1,8 @@
+document.write('<script src="loot-kits-r-common-1.js?v=ac-var1"><\/script>');
+document.write('<script src="loot-kits-r-common-2.js?v=ac-var1"><\/script>');
+document.write('<script src="loot-kits-r-common-2t.js?v=ac-var1"><\/script>');
+document.write('<script src="loot-kits-r-uncommon-2t.js?v=ac-var1"><\/script>');
+document.write('<script src="loot-kits-r-uncommon-3t.js?v=ac-var1"><\/script>');
 /* Table Loot Forge — gear mechanics (named properties) */
 (function(g){
 const pick=a=>a[Math.floor(Math.random()*a.length)];
