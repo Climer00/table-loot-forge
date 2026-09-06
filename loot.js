@@ -58,9 +58,9 @@ function effectSig(item){
   if(item.effectId)return item.effectId;
   if(item.type==="Scroll"||item.type==="Potion"||item.type==="Tincture"){
     let n=String(item.name||"");
-    n=n.replace(/^Potion of \S+ /,\"Potion:\");
-    n=n.replace(/^Tincture of \S+ /,\"Tincture:\");
-    n=n.replace(/^Scroll of /,\"Scroll:\");
+    n=n.replace(/^Potion of \S+ /,"Potion:");
+    n=n.replace(/^Tincture of \S+ /,"Tincture:");
+    n=n.replace(/^Scroll of /,"Scroll:");
     return n;
   }
   const titles=normalizeProperties(item).map(p=>p.title||"").filter(Boolean).join("|");
