@@ -4,15 +4,14 @@ On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs. Pick a rarity, 
 
 Built for mid-session speed: big tap targets, phone-first, adjudication-simple. Effects are familiar in shape (rarities, slots, DCs, dice) but freer than official items — everything is labeled **homebrew**.
 
+UI is a charcoal/ember **loot forge** (not purple mystical) — quick DM drops mid-session.
+
 ## Open it
 
 - **Repo:** https://github.com/Climer00/table-loot-forge
-- **Live (main branch):** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
-- Or download / clone and open `index.html` in any browser (zero build step, no CDN required).
-
-For a pinned, cache-friendly share link, use a commit SHA:
-
-`https://raw.githack.com/Climer00/table-loot-forge/<commitSha>/index.html`
+- **Live (main):** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
+- **Pinned (best share):** `https://raw.githack.com/Climer00/table-loot-forge/<commitSha>/index.html`
+- Clone/download and open `index.html` in a browser (zero build). Keep `loot.js` next to it if opening as local files.
 
 ## How to use
 
@@ -25,7 +24,7 @@ Tap Create again anytime for another roll with the same filters.
 
 ## Design notes
 
-- **Scrolls** — single-use spell-ish effects scaled by rarity (cantrip feel → high-level feel); homebrew names OK  
+- **Scrolls** — single-use spell-ish effects scaled by rarity (cantrip → high-level feel); homebrew names OK  
 - **Potions** — clearer combat/utility quaffs  
 - **Tinctures** — lighter, shorter herbal-alchemical sips  
 - **Gear** — lasting magic items for the chosen slot; power (DC, dice, uses, attunement) scales with rarity  
