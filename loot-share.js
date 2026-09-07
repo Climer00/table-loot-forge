@@ -25,9 +25,7 @@
     const description=(card.querySelector(".look")||{}).textContent||"";
     const loreEl=card.querySelector(".lore");
     let lore="";
-    if(loreEl){
-      lore=loreEl.textContent.replace(/^\s*Lore:\s*/i,"");
-    }
+    if(loreEl) lore=loreEl.textContent.replace(/^\s*Lore:\s*/i,"");
     const properties=[].slice.call(card.querySelectorAll(".prop")).map(function(p){
       const tEl=p.querySelector(".prop-title");
       const title=((tEl&&tEl.textContent)||"").replace(/\.\s*$/,"");
@@ -35,14 +33,15 @@
       if(title) text=text.replace(title,"").replace(/^\.\s*/,"");
       return {title:title.trim(), text:text.trim()};
     });
-    const attune=!!card.querySelector(".chip.attune");
+    const attune=!!card.querySelector(".chip.attune") || /\brequires attunement\b/i.test(category);
     let rarity="Common";
-    const rm=category.match(/,\s*(common|uncommon|rare|very rare|legendary)\s*$/i);
+    const rm=category.match(/\b(very rare|legendary|uncommon|common|rare)\b/i);
     if(rm){
       const raw=rm[1].toLowerCase();
       rarity=raw==="very rare"?"Very Rare":raw.replace(/^\w/,function(c){return c.toUpperCase();});
     }
-    return {name:name.trim(), category:category.trim(), description:description.trim(), lore:lore.trim(), properties:properties, attune:attune, rarity:rarity};
+    const cleanCat=category.replace(/\s*\(requires attunement\)/i,"").trim();
+    return {name:name.trim(), category:cleanCat, description:description.trim(), lore:lore.trim(), properties:properties, attune:attune, rarity:rarity};
   }
 
   function formatPlayerText(item){
@@ -57,28 +56,46 @@
       if(!title && !text) return;
       lines.push(title ? (title+". "+text) : text);
     });
-    if(item.lore){
-      lines.push("");
-      lines.push(playerize(item.lore));
-    }
+    if(item.lore){ lines.push(""); lines.push(playerize(item.lore)); }
     lines.push("");
     lines.push("Homebrew");
     return lines.join("\n").replace(/\n{3,}/g,"\n\n").trim();
   }
 
-  function wrapLines(ctx, text, maxWidth){
+  function wrapLines(ctx, text, maxWidth, font){
+    if(font) ctx.font=font;
     const words=String(text||"").split(/\s+/);
     const lines=[];
     let line="";
+    function flush(){ if(line){ lines.push(line); line=""; } }
+    function breakWord(word){
+      let chunk="";
+      for(let i=0;i<word.length;i++){
+        const test=chunk+word[i];
+        if(ctx.measureText(test).width<=maxWidth) chunk=test;
+        else{
+          if(chunk) lines.push(chunk);
+          chunk=word[i];
+        }
+      }
+      return chunk;
+    }
     for(let i=0;i<words.length;i++){
-      const test=line?line+" "+words[i]:words[i];
+      const word=words[i];
+      if(!word) continue;
+      if(ctx.measureText(word).width>maxWidth){
+        flush();
+        line=breakWord(word);
+        continue;
+      }
+      const test=line?line+" "+word:word;
       if(ctx.measureText(test).width<=maxWidth) line=test;
       else{
-        if(line) lines.push(line);
-        line=words[i];
+        flush();
+        line=word;
       }
     }
-    if(line) lines.push(line);
+    flush();
     return lines.length?lines:[""];
   }
 
@@ -93,33 +110,34 @@
     ctx.closePath();
   }
 
+  const FONT_NAME="800 42px Segoe UI, system-ui, sans-serif";
+  const FONT_CAT="italic 24px Segoe UI, system-ui, sans-serif";
+  const FONT_BODY="24px Segoe UI, system-ui, sans-serif";
+  const FONT_BODY_B="800 24px Segoe UI, system-ui, sans-serif";
+  const FONT_LORE="italic 22px Segoe UI, system-ui, sans-serif";
+  const FONT_CHIP="700 16px Segoe UI, system-ui, sans-serif";
+  const FONT_FOOT="700 16px Segoe UI, system-ui, sans-serif";
+
   function measureCard(item){
-    const W=900;
-    const pad=56;
-    const inner=W-pad*2;
+    const W=900, pad=52, inner=W-pad*2, textW=inner-36;
     const c=document.createElement("canvas").getContext("2d");
-    let y=64;
-    c.font="800 44px Segoe UI, system-ui, sans-serif";
-    y+=wrapLines(c,item.name,inner).length*52+8;
-    c.font="italic 26px Segoe UI, system-ui, sans-serif";
-    y+=wrapLines(c,item.category,inner).length*34+18;
-    y+=40;
+    let y=70;
+    y+=wrapLines(c,item.name,inner,FONT_NAME).length*50+6;
+    y+=wrapLines(c,item.category,inner,FONT_CAT).length*32+16;
+    y+=44;
     if(item.description){
-      c.font="26px Segoe UI, system-ui, sans-serif";
-      y+=wrapLines(c,playerize(item.description),inner-24).length*34+36;
+      y+=wrapLines(c,playerize(item.description),textW,FONT_BODY).length*32+36;
     }
     (item.properties||[]).forEach(function(p){
       const block=(p.title?p.title+". ":"")+playerize(p.text);
-      c.font="26px Segoe UI, system-ui, sans-serif";
-      y+=wrapLines(c,block,inner-24).length*34+16;
+      y+=wrapLines(c,block,textW,FONT_BODY).length*32+14;
     });
-    y+=20;
+    y+=18;
     if(item.lore){
-      c.font="italic 24px Segoe UI, system-ui, sans-serif";
-      y+=wrapLines(c,playerize(item.lore),inner).length*32+24;
+      y+=wrapLines(c,playerize(item.lore),inner,FONT_LORE).length*30+20;
     }
-    y+=70;
-    return Math.max(1180, y+pad);
+    y+=64;
+    return Math.max(720, y+pad);
   }
 
   function renderCardCanvas(item){
@@ -130,8 +148,9 @@
     canvas.height=H;
     const ctx=canvas.getContext("2d");
     const accent=RCOLOR[item.rarity]||RCOLOR.Common;
-    const pad=56;
+    const pad=52;
     const inner=W-pad*2;
+    const textW=inner-36;
 
     const bg=ctx.createLinearGradient(0,0,0,H);
     bg.addColorStop(0,"#2a3340");
@@ -142,7 +161,7 @@
     ctx.fill();
 
     ctx.strokeStyle=accent;
-    ctx.globalAlpha=0.75;
+    ctx.globalAlpha=0.8;
     ctx.lineWidth=8;
     drawRoundRect(ctx,10,10,W-20,H-20,30);
     ctx.stroke();
@@ -152,92 +171,89 @@
     ctx.stroke();
     ctx.globalAlpha=1;
 
-    let y=72;
+    let y=76;
     ctx.fillStyle=accent;
-    ctx.font="800 44px Segoe UI, system-ui, sans-serif";
-    wrapLines(ctx,item.name,inner).forEach(function(ln){
+    wrapLines(ctx,item.name,inner,FONT_NAME).forEach(function(ln){
       ctx.fillText(ln,pad,y);
-      y+=52;
+      y+=50;
     });
-    y+=4;
+    y+=2;
     ctx.fillStyle="#8b97a8";
-    ctx.font="italic 26px Segoe UI, system-ui, sans-serif";
-    wrapLines(ctx,item.category,inner).forEach(function(ln){
+    wrapLines(ctx,item.category,inner,FONT_CAT).forEach(function(ln){
       ctx.fillText(ln,pad,y);
-      y+=34;
+      y+=32;
     });
-    y+=14;
+    y+=16;
 
     function chip(label,x,color){
-      ctx.font="700 18px Segoe UI, system-ui, sans-serif";
+      ctx.font=FONT_CHIP;
       const tw=ctx.measureText(label).width;
-      const cw=tw+28, ch=32;
+      const cw=tw+26, ch=30;
       ctx.fillStyle="rgba(0,0,0,0.35)";
       ctx.strokeStyle=color;
       ctx.lineWidth=2;
-      drawRoundRect(ctx,x,y,cw,ch,16);
+      drawRoundRect(ctx,x,y,cw,ch,15);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle=color;
-      ctx.fillText(label,x+14,y+22);
+      ctx.fillText(label,x+13,y+20);
       return cw+10;
     }
     let x=pad;
     x+=chip("HOMEBREW",x,"#3dcdb8");
     if(item.attune) chip("ATTUNEMENT",x,"#ffb86b");
-    y+=52;
+    y+=48;
 
     if(item.description){
-      const lines=wrapLines(ctx,playerize(item.description),inner-28);
-      const boxH=lines.length*34+28;
+      const lines=wrapLines(ctx,playerize(item.description),textW,FONT_BODY);
+      const boxH=lines.length*32+26;
       ctx.fillStyle="rgba(0,0,0,0.22)";
       ctx.fillRect(pad,y,inner,boxH);
       ctx.fillStyle="#3dcdb8";
       ctx.fillRect(pad,y,6,boxH);
       ctx.fillStyle="#e8edf2";
-      ctx.font="26px Segoe UI, system-ui, sans-serif";
-      let ty=y+32;
-      lines.forEach(function(ln){ ctx.fillText(ln,pad+22,ty); ty+=34; });
-      y+=boxH+22;
+      ctx.font=FONT_BODY;
+      let ty=y+30;
+      lines.forEach(function(ln){ ctx.fillText(ln,pad+20,ty); ty+=32; });
+      y+=boxH+18;
     }
 
     if((item.properties||[]).length){
-      let blockH=16;
       const drawn=[];
-      ctx.font="26px Segoe UI, system-ui, sans-serif";
+      let blockH=18;
       (item.properties||[]).forEach(function(p){
         const title=playerize(p.title);
         const text=playerize(p.text);
-        const lines=wrapLines(ctx,(title?title+". ":"")+text,inner-28);
+        const lines=wrapLines(ctx,(title?title+". ":"")+text,textW,FONT_BODY);
         drawn.push({title:title, lines:lines});
-        blockH+=lines.length*34+12;
+        blockH+=lines.length*32+12;
       });
       ctx.fillStyle="rgba(0,0,0,0.28)";
       ctx.fillRect(pad,y,inner,blockH);
       ctx.fillStyle="#ff6b35";
       ctx.fillRect(pad,y,6,blockH);
-      let ty=y+36;
+      let ty=y+34;
       drawn.forEach(function(d){
         d.lines.forEach(function(ln,i){
           if(i===0 && d.title){
             const prefix=d.title+". ";
-            ctx.font="800 26px Segoe UI, system-ui, sans-serif";
+            ctx.font=FONT_BODY_B;
             ctx.fillStyle="#d4a574";
-            ctx.fillText(prefix,pad+22,ty);
+            ctx.fillText(prefix,pad+20,ty);
             const pw=ctx.measureText(prefix).width;
-            ctx.font="26px Segoe UI, system-ui, sans-serif";
+            ctx.font=FONT_BODY;
             ctx.fillStyle="#e8edf2";
-            ctx.fillText(ln.slice(prefix.length),pad+22+pw,ty);
+            ctx.fillText(ln.slice(prefix.length),pad+20+pw,ty);
           }else{
-            ctx.font="26px Segoe UI, system-ui, sans-serif";
+            ctx.font=FONT_BODY;
             ctx.fillStyle="#e8edf2";
-            ctx.fillText(ln,pad+22,ty);
+            ctx.fillText(ln,pad+20,ty);
           }
-          ty+=34;
+          ty+=32;
         });
         ty+=12;
       });
-      y+=blockH+24;
+      y+=blockH+20;
     }
 
     if(item.lore){
@@ -247,27 +263,24 @@
       ctx.moveTo(pad,y);
       ctx.lineTo(W-pad,y);
       ctx.stroke();
-      y+=36;
+      y+=34;
       ctx.fillStyle="#8b97a8";
-      ctx.font="italic 24px Segoe UI, system-ui, sans-serif";
-      wrapLines(ctx,playerize(item.lore),inner).forEach(function(ln){
+      wrapLines(ctx,playerize(item.lore),inner,FONT_LORE).forEach(function(ln){
         ctx.fillText(ln,pad,y);
-        y+=32;
+        y+=30;
       });
-      y+=8;
     }
 
     ctx.fillStyle="#6b7c93";
-    ctx.font="700 18px Segoe UI, system-ui, sans-serif";
-    ctx.fillText("TABLE LOOT FORGE  ·  HOMEBREW", pad, H-40);
+    ctx.font=FONT_FOOT;
+    ctx.fillText("TABLE LOOT FORGE  ·  HOMEBREW", pad, H-36);
     return canvas;
   }
 
   function canvasToBlob(canvas){
     return new Promise(function(resolve){
-      if(canvas.toBlob){
-        canvas.toBlob(function(b){ resolve(b); }, "image/png");
-      }else{
+      if(canvas.toBlob) canvas.toBlob(function(b){ resolve(b); }, "image/png");
+      else{
         const data=canvas.toDataURL("image/png");
         const bin=atob(data.split(",")[1]);
         const arr=new Uint8Array(bin.length);
@@ -322,38 +335,27 @@
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   }
 
-  async function shareItem(item, wantImage){
-    const text=formatPlayerText(item);
+  async function shareImageOnly(item){
     const canvas=renderCardCanvas(item);
     const blob=await canvasToBlob(canvas);
     const name=fileName(item);
     const file=new File([blob], name, {type:"image/png"});
-    if(wantImage){
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        try{
-          await navigator.share({files:[file], title:item.name, text:text});
-          toast("Shared card");
-          return;
-        }catch(e){ if(e&&e.name==="AbortError") return; }
-      }
-      await downloadPng(blob, name);
-      toast("Image saved");
-      return;
-    }
-    if(navigator.share){
+    if(navigator.canShare && navigator.canShare({files:[file]})){
       try{
-        if(navigator.canShare && navigator.canShare({files:[file], text:text})){
-          await navigator.share({title:item.name+" (Homebrew)", text:text, files:[file]});
-          toast("Sent to players");
-          return;
-        }
-        await navigator.share({title:item.name+" (Homebrew)", text:text});
-        toast("Text ready to send");
+        await navigator.share({files:[file], title:item.name});
+        toast("Card sent");
         return;
       }catch(e){ if(e&&e.name==="AbortError") return; }
     }
-    const ok=await copyText(text);
-    toast(ok?"Player text copied":"Couldn't copy");
+    if(navigator.share){
+      try{
+        await navigator.share({files:[file], title:item.name});
+        toast("Card sent");
+        return;
+      }catch(e){ if(e&&e.name==="AbortError") return; }
+    }
+    await downloadPng(blob, name);
+    toast("Image saved");
   }
 
   function enhanceCard(card){
@@ -383,8 +385,7 @@
     e.stopPropagation();
     e.stopImmediatePropagation();
     const act=btn.getAttribute("data-action");
-    if(act==="image") shareItem(item, true);
-    else if(act==="copy"){
+    if(act==="copy"){
       copyText(formatPlayerText(item)).then(function(ok){
         toast(ok?"Player text copied":"Couldn't copy");
         if(ok){
@@ -394,9 +395,9 @@
           setTimeout(function(){ btn.classList.remove("copied"); btn.textContent=prev; },1400);
         }
       });
-    }else{
-      shareItem(item, false);
+      return;
     }
+    shareImageOnly(item);
   }, true);
 
   function scan(){ document.querySelectorAll(".loot-card").forEach(enhanceCard); }
