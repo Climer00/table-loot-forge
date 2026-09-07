@@ -1,1 +1,103 @@
-(async function(){const b64="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";const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));const code=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate"))).text();(0,eval)(code);})().catch(e=>console.error("TLF loot-potions.js inflate failed",e));
+/* Table Loot Forge — potions & tinctures */
+(function(g){
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fill=(t,m)=>t.replace(/\{(\w+)\}/g,(_,k)=>m[k]!=null?m[k]:"{"+k+"}");
+const DMG="fire cold lightning thunder acid poison necrotic radiant force psychic".split(" ");
+const ADJ="Ashen Bright Cinder Crimson Dawn Dusk Ember Feral Frost Gilded Hollow Iron Jade Keen Lunar Mist Obsidian Quiet Riven Rune Scarlet Shadow Silver Storm Thorn Verdant Warden Wild Zephyr Blight Elder Glimmer Hearth Ivory Nettle Oaken Prism Quicksilver".split(" ");
+function fillProps(props,m){return props.map(p=>({title:p.title,text:fill(p.text,m)}));}
+
+const POT=[
+["Vigor",[{title:"Vigor",text:"Action. Drink: regain {D} hit points, and you have advantage on Strength checks for 1 minute. Empty vial."}]],
+["Clarity",[{title:"Clarity",text:"Bonus action. Drink: end the charmed and frightened conditions on yourself; you have advantage on Wisdom saving throws for 10 minutes."}]],
+["Rush",[{title:"Rush",text:"Bonus action. Drink: your speed increases by 20 feet, and you can take the Dash action as a bonus action for 1 minute. When it ends, your speed is reduced by 10 feet for 1 minute."}]],
+["Ironhide",[{title:"Ironhide",text:"Action. Drink: gain {D} temporary hit points and resistance to nonmagical bludgeoning, piercing, and slashing damage for 10 minutes."}]],
+["Vanish",[{title:"Vanish",text:"Bonus action. Drink: you become invisible for 1 minute or until you attack or cast a spell."}]],
+["Dragonbreath",[{title:"Dragonbreath",text:"Action. Drink, then exhale a 15-foot cone of {t}. Creatures in the cone make a DC {dc} Dexterity saving throw. Fail: {D} {t} damage. Success: half."}]],
+["Night-Eye",[{title:"Night-Eye",text:"Action. Drink: gain darkvision out to 60 feet (or +60 feet if you already have it) for 1 hour."}]],
+["Stoneblood",[{title:"Stoneblood",text:"Action. Drink: you are immune to being petrified, gain +2 AC, and your speed decreases by 10 feet for 10 minutes."}]],
+["Heroism",[{title:"Heroism",text:"Action. Drink: at the start of each of your turns for 1 minute, you gain {d} temporary hit points (these don't stack with themselves beyond replacing the previous temporary HP from this potion)."}]],
+["Spellfuel",[{title:"Spellfuel",text:"Action. Drink: regain one expended spell slot of the {sp} tier or lower (DM adjudicates exact level)."}]],
+["Bullheart",[{title:"Bullheart",text:"Action. Drink: your Strength score becomes 21 for 1 hour (if already higher, gain +2 Strength, max 30 — DM)."}]],
+["Catsteps",[{title:"Catsteps",text:"Bonus action. Drink: for 10 minutes you have advantage on Dexterity (Stealth) and Dexterity (Acrobatics) checks, and falling damage is reduced by {D}."}]],
+["Mindfire",[{title:"Mindfire",text:"Action. Drink: for 10 minutes you have advantage on Intelligence checks and saving throws, and resistance to psychic damage."}]],
+["Bloodboil",[{title:"Bloodboil",text:"Action. Drink: for 1 minute the first time you hit with a weapon attack each turn, deal an extra {d} fire damage."}]],
+["Stillwater",[{title:"Stillwater",text:"Action. Drink: end the poisoned condition on yourself and gain advantage on Constitution saving throws for 1 hour."}]],
+["Skyhook",[{title:"Skyhook",text:"Action. Drink: for 1 minute you gain a flying speed of 30 feet. If aloft when it ends, you fall."}]],
+["Gills",[{title:"Gills",text:"Action. Drink: for 1 hour you can breathe underwater and gain a swimming speed equal to your walking speed."}]],
+["Thornskin",[{title:"Thornskin",text:"Action. Drink: for 10 minutes when a creature hits you with a melee attack, it takes {d} piercing damage (no save)."}]],
+["Truesight Sip",[{title:"Truesight Sip",text:"Action. Drink: for 10 minutes you have truesight out to 30 feet."}]],
+["Phoenix Draught",[{title:"Phoenix Draught",text:"Action. Drink: for 1 minute if you are reduced to 0 hit points, you drop to 1 hit point instead (once), and you have resistance to fire damage."}]],
+["Warmth",[{title:"Warmth",text:"Action. Drink: you have resistance to cold damage for 1 hour and automatically succeed on saves against extreme cold (DM)."}]],
+["Cooling",[{title:"Cooling",text:"Action. Drink: you have resistance to fire damage for 1 hour and automatically succeed on saves against extreme heat (DM)."}]],
+["Giantstep",[{title:"Giantstep",text:"Action. Drink: for 10 minutes your jumping distances are tripled and you ignore the first 10 feet of falling damage."}]],
+["Keenmind",[{title:"Keenmind",text:"Action. Drink: for 10 minutes you have advantage on Wisdom (Perception) checks and can't be surprised while conscious."}]],
+["Oakenhide",[{title:"Oakenhide",text:"Action. Drink: gain +1 AC for 10 minutes. If you haven't moved this turn, that bonus is +2 instead."}]],
+["Second Wind",[{title:"Second Wind",text:"Action. Drink: regain {D} hit points. If you were below half your hit point maximum, regain {d} extra."}]],
+["Silence Drop",[{title:"Silence Drop",text:"Bonus action. Drink: for 10 minutes your footsteps and voice make no sound unless you choose to speak."}]],
+["Stormvein",[{title:"Stormvein",text:"Action. Drink: for 1 minute the first time you hit with a melee attack each turn, deal an extra {d} lightning damage."}]],
+["Graveward",[{title:"Graveward",text:"Action. Drink: for 10 minutes undead have disadvantage on attack rolls against you."}]],
+["True North",[{title:"True North",text:"Action. Drink: for 8 hours you always know which way is north and have advantage on Survival checks to avoid becoming lost."}]],
+["Softfall",[{title:"Softfall",text:"Action. Drink: for 10 minutes you take no damage from falling 30 feet or less and always land on your feet."}]],
+["Ironlung",[{title:"Ironlung",text:"Action. Drink: for 1 hour you can hold your breath twice as long and have advantage on saves against inhaled poison."}]],
+["Battlerage",[{title:"Battlerage",text:"Bonus action. Drink: for 1 minute you have advantage on Strength saving throws and resistance to psychic damage. When it ends, you gain 1 level of exhaustion."}]],
+["Mending Draft",[{title:"Mending Draft",text:"Action. Drink: end one condition on yourself from this list: blinded, deafened, paralyzed, or poisoned."}]],
+["Farstep",[{title:"Farstep",text:"Bonus action. Drink: teleport up to 30 feet to an unoccupied space you can see. Empty vial."}]],
+["Sunblood",[{title:"Sunblood",text:"Action. Drink: for 10 minutes you shed bright light 10 feet and dim light 10 feet more. Fiends and undead in the bright light have disadvantage on attack rolls against you."}]],
+["Deeprest",[{title:"Deeprest",text:"Action. Drink during a short rest: you regain one extra Hit Die worth of hit points when you spend Hit Dice during that rest."}]],
+["Spellward",[{title:"Spellward",text:"Action. Drink: for 1 minute you have advantage on saving throws against spells."}]]
+];
+
+const TIN=[
+["Mint",[{title:"Mint",text:"Bonus action. Sip: regain {d} hit points. You can't benefit from another tincture for 1 minute."}]],
+["Bitterroot",[{title:"Bitterroot",text:"Bonus action. Sip: you have advantage on the next Constitution saving throw you make within 10 minutes."}]],
+["Foxglove",[{title:"Foxglove",text:"Bonus action. Sip: your walking speed increases by 10 feet until the end of your next turn."}]],
+["Smokeleaf",[{title:"Smokeleaf",text:"Bonus action. Sip: you can hold your breath for 5 extra minutes, and you have advantage on the next Dexterity (Stealth) check you make within 10 minutes."}]],
+["Riverglint",[{title:"Riverglint",text:"Bonus action. Sip: end the poisoned condition on yourself if it was caused by a nonmagical poison."}]],
+["Embertea",[{title:"Embertea",text:"Bonus action. Sip: you have resistance to cold damage until the end of your next turn."}]],
+["Moonnectar",[{title:"Moonnectar",text:"Bonus action. Sip: you have advantage on Wisdom (Insight) checks for 10 minutes."}]],
+["Thornhoney",[{title:"Thornhoney",text:"Bonus action. Sip: the next time you hit with a weapon attack within 1 minute, the attack deals an extra {d} poison damage."}]],
+["Saltvein",[{title:"Saltvein",text:"Bonus action. Sip: gain {d} temporary hit points for 10 minutes (doesn't stack with itself)."}]],
+["Quietbark",[{title:"Quietbark",text:"Bonus action. Sip: you have advantage on Dexterity (Stealth) checks against creatures relying on hearing for 10 minutes."}]],
+["Ironblossom",[{title:"Ironblossom",text:"Bonus action. Sip: you have advantage on the next Strength check or Strength saving throw you make within 10 minutes."}]],
+["Starpetal",[{title:"Starpetal",text:"Bonus action. Sip: you have advantage on the next Intelligence (Arcana or Investigation) check you make within 10 minutes."}]],
+["Wolfsbane Drop",[{title:"Wolfsbane Drop",text:"Bonus action. Sip: you have advantage on saving throws against being frightened until the end of your next turn."}]],
+["Honeycomb Rush",[{title:"Honeycomb Rush",text:"Bonus action. Sip: you can take the Dash or Disengage action as part of this bonus action (choose one)."}]],
+["Frostmint",[{title:"Frostmint",text:"Bonus action. Sip: you have resistance to fire damage until the end of your next turn."}]],
+["Brightwort",[{title:"Brightwort",text:"Bonus action. Sip: you shed dim light in a 10-foot radius for 10 minutes and have advantage on saves against being blinded."}]],
+["Shadowthyme",[{title:"Shadowthyme",text:"Bonus action. Sip: until the end of your next turn, opportunity attacks against you are made with disadvantage."}]],
+["Goldenseal",[{title:"Goldenseal",text:"Bonus action. Sip: end one nonmagical disease affecting you, or gain advantage on your next Medicine check within 1 hour."}]],
+["Pepperblood",[{title:"Pepperblood",text:"Bonus action. Sip: the next time you take damage within 1 minute, reduce that damage by {d}."}]],
+["Dreamcap",[{title:"Dreamcap",text:"Bonus action. Sip: you are immune to magical sleep for 10 minutes and have advantage on saves against being charmed during that time."}]],
+["Pinepitch",[{title:"Pinepitch",text:"Bonus action. Sip: you have advantage on the next Strength (Athletics) check to climb you make within 10 minutes."}]],
+["Seaglass",[{title:"Seaglass",text:"Bonus action. Sip: you can hold your breath twice as long until you finish a short rest."}]],
+["Ashroot",[{title:"Ashroot",text:"Bonus action. Sip: you have resistance to fire damage until the start of your next turn."}]],
+["Coldsnap",[{title:"Coldsnap",text:"Bonus action. Sip: you have resistance to cold damage until the start of your next turn."}]],
+["Lawleaf",[{title:"Lawleaf",text:"Bonus action. Sip: you have advantage on the next Insight check you make within 10 minutes."}]],
+["Trailberry",[{title:"Trailberry",text:"Bonus action. Sip: you have advantage on the next Survival check to follow tracks you make within 1 hour."}]],
+["Gravewort",[{title:"Gravewort",text:"Bonus action. Sip: you have advantage on the next saving throw against an undead's effect within 10 minutes."}]],
+["Sunthistle",[{title:"Sunthistle",text:"Bonus action. Sip: you have advantage on the next saving throw against being blinded."}]],
+["Nightshade Kiss",[{title:"Nightshade Kiss",text:"Bonus action. Sip: the next time you hit with a weapon within 1 minute, the target's speed is reduced by 10 feet until the start of your next turn."}]],
+["Coppervein",[{title:"Coppervein",text:"Bonus action. Sip: you have advantage on the next Constitution save against exhaustion within 1 hour."}]],
+["Hearthsip",[{title:"Hearthsip",text:"Bonus action. Sip: you automatically succeed on the next save against extreme cold you make within 1 hour (DM)."}]],
+["Reedwater",[{title:"Reedwater",text:"Bonus action. Sip: swamp water and mud are not difficult terrain for you for 10 minutes."}]],
+["Sparkleaf",[{title:"Sparkleaf",text:"Bonus action. Sip: the next time you take lightning or thunder damage within 1 minute, reduce it by {d}."}]],
+["Vowpetal",[{title:"Vowpetal",text:"Bonus action. Sip: you have advantage on the next saving throw against being charmed."}]],
+["Lastberry",[{title:"Lastberry",text:"Bonus action. Sip: if you are reduced to 0 hit points before the start of your next turn, drop to 1 instead. Then this benefit ends."}]],
+["Maptea",[{title:"Maptea",text:"Bonus action. Sip: you know which way is north for 1 hour."}]],
+["Stablegrain",[{title:"Stablegrain",text:"Bonus action. Sip: you have advantage on the next check to stay mounted within 10 minutes."}]],
+["Glassdrop",[{title:"Glassdrop",text:"Bonus action. Sip: you have advantage on the next save against being blinded by flash or bright light."}]]
+];
+
+function potionItem(r,s){
+  const [n,props]=pick(POT);
+  const m={d:s.d,D:s.D,dc:s.dc,t:pick(DMG),sp:s.sp};
+  return{name:"Potion of "+pick(ADJ)+" "+n,slot:"Potion",attune:false,properties:fillProps(props,m),effectId:"Potion:"+n};
+}
+function tinctureItem(r,s){
+  const [n,props]=pick(TIN);
+  const m={d:s.d,D:s.D,dc:s.dc,t:pick(DMG)};
+  return{name:"Tincture of "+pick(ADJ)+" "+n,slot:"Tincture",attune:false,properties:fillProps(props,m),effectId:"Tincture:"+n};
+}
+g.TLF_potionItem=potionItem;
+g.TLF_tinctureItem=tinctureItem;
+})(typeof window!=="undefined"?window:globalThis);
