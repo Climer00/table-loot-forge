@@ -13,7 +13,7 @@
     "loot-kits-pack-boots-1.js","loot-kits-pack-boots-2.js","loot-kits-pack-boots-3.js"
   ];
   for(var i=0;i<packs.length;i++){
-    document.write('<script src="'+packs[i]+'?v=kits100b"><\/script>');
+    document.write('<script src="'+packs[i]+'?v=kits100c"><\/script>');
   }
 })();
 (function(g){
@@ -36,7 +36,29 @@ function tidyZeroBonus(t){
   t=t.replace(/\+0\s+bonus/gi,"no bonus");
   return t;
 }
-function fillProps(props,m){return props.map(p=>({title:p.title,text:tidyZeroBonus(fill(p.text,m))}));}
+function dropZeroBonusText(t){
+  t=tidyZeroBonus(String(t||""));
+  if(!/no bonus/i.test(t)) return t.trim();
+  t=t.replace(/\byou gain no bonus to [^.,;]+,\s*and\s+/gi,"you have ");
+  t=t.replace(/\byou gain no bonus to [^.,;]+\s+and\s+/gi,"you have ");
+  t=t.replace(/\bwhile (?:wearing|holding|wielding) (?:it|them|this \w+) you gain no bonus to [^.]+\.\s*/gi,"");
+  t=t.replace(/\byou gain no bonus to [^.]+\.\s*/gi,"");
+  t=t.replace(/\bgain no bonus to [^.]+\.\s*/gi,"");
+  t=t.replace(/\bno bonus to [^.,;]+\s+and\s+/gi,"");
+  t=t.split(/(?<=[.!?])\s+/).filter(function(s){
+    s=s.trim();
+    if(!s) return false;
+    if(/\bno bonus\b/i.test(s) && /\bgain(?:s)?\b/i.test(s)) return false;
+    if(/^\s*no bonus\b/i.test(s)) return false;
+    return true;
+  }).join(" ");
+  return t.replace(/\s+/g," ").replace(/\s+\./g,".").trim();
+}
+function fillProps(props,m){
+  return (props||[]).map(function(p){
+    return {title:p.title, text:dropZeroBonusText(fill(p.text,m))};
+  }).filter(function(p){ return String(p.text||"").length; });
+}
 function isStubKit(kit){
   if(!kit||!kit.length)return true;
   return kit.some(function(p){
@@ -74,7 +96,10 @@ function gearFx(type,r,s){
   if(type==="Weapon"&&(r==="Very Rare"||r==="Legendary")&&Math.random()<0.08){
     pool.push([{title:"Cataclysm Edge",text:"You gain a +{b} bonus to attack rolls and damage rolls with this weapon."},{title:"Cone Burst",text:"Action ({u}): unleash a 30-foot cone of {t}. Each creature in the cone must make a DC {dc} Dexterity saving throw. On a failed save, a creature takes {D} {t} damage; on a successful save, half as much."}]);
   }
-  const props=fillProps(pick(pool),m);
+  let props=fillProps(pick(pool),m);
+  if(!props.length){
+    props=[{title:"Minor Charm",text:"While you wear or hold this item, you have advantage on one type of check chosen when you first claim it (DM locks it)."}];
+  }
   return{properties:props,attune:attune(r,s)};
 }
 g.TLF_gearFx=gearFx;
