@@ -1,4 +1,4 @@
-/* Table Loot Forge — set bonus from shared name */
+/* Table Loot Forge — set bonus from shared name (gear only) */
 (function(){
   const THEME={
     zephyr:"While you wear another {set} item, your jumping distance increases by an extra 5 feet and Gust-like flight from {set} items does not stack — use the longest flight, then add this 5 feet. In addition to each item's other properties.",
@@ -44,6 +44,20 @@
 
   function pick(a){return a[Math.floor(Math.random()*a.length)];}
 
+  function isConsumable(card){
+    const cat=((card.querySelector(".category-line")||{}).textContent||"").toLowerCase();
+    const name=((card.querySelector(".item-name")||{}).textContent||"").toLowerCase();
+    if(/\b(potion|tincture|scroll)s?\b/.test(cat)) return true;
+    if(/^(potion|tincture|scroll)\b/.test(name)) return true;
+    return false;
+  }
+
+  function stripSet(card){
+    card.querySelectorAll(".set-bonus, .chip-set").forEach(function(el){ el.remove(); });
+    const titles=card.querySelector(".prop-titles");
+    if(titles) titles.textContent=titles.textContent.replace(/\s*·\s*[^\u00b7]*\s*Set/g,"").trim();
+  }
+
   function setNameFrom(name){
     const n=String(name||"").replace(/^\s*The\s+/i,"").trim();
     const of=n.match(/^(.+?)\s+of the\s+(.+)$/i);
@@ -60,7 +74,13 @@
   }
 
   function addSetToCard(card){
-    if(!card || card.dataset.setReady) return;
+    if(!card) return;
+    if(isConsumable(card)){
+      stripSet(card);
+      card.dataset.setReady="skip";
+      return;
+    }
+    if(card.dataset.setReady) return;
     const nameEl=card.querySelector(".item-name");
     if(!nameEl) return;
     const set=setNameFrom(nameEl.textContent);
