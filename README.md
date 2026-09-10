@@ -8,11 +8,11 @@ Not affiliated with Wizards of the Coast.
 
 ## Open it
 
-- **Live:** https://raw.githack.com/Climer00/table-loot-forge/e7ea11c85154be41c56b6cc0d2ce745158c0b888/index.html
+- **Live:** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
 - **Repo:** https://github.com/Climer00/table-loot-forge
 - Or clone / download and open `index.html` in a browser.
 
-That Live URL is pinned to the current working commit so phones do not keep an old broken copy. When we ship the next batch of changes, the Live link gets pointed at the new commit.
+If a phone still shows an old card after a push, hard-refresh that Live URL.
 
 ## How to use
 
