@@ -73,10 +73,11 @@
       if(type==="Weapon"&&r==="Very Rare"){
         out.properties=vrWeaponProps(s);
       }
+      out.attune=false;
       return out;
     }
     if(type==="Weapon"&&r==="Very Rare"){
-      return {properties:vrWeaponProps(s), attune:true};
+      return {properties:vrWeaponProps(s), attune:false};
     }
     return {properties:[{title:"Error", text:"Missing loot-mech.js"}], attune:false};
   };
