@@ -129,11 +129,58 @@
     if(!document.getElementById("tlf-place-css")){
       var st=document.createElement("style");
       st.id="tlf-place-css";
-      st.textContent=".place-opt{font-weight:650;text-transform:none;letter-spacing:0;color:var(--muted);font-size:.65rem}"+ ".btn.place.active{border-color:#c9b8ff;background:linear-gradient(180deg,#2a2438,#1e1a28);color:#e0d4ff}"+ ".chip-place{color:#c9b8ff;border-color:rgba(181,122,255,.45)}";
+      st.textContent=".place-opt{font-weight:650;text-transform:none;letter-spacing:0;color:var(--muted);font-size:.65rem}.btn.place.active{border-color:#c9b8ff;background:linear-gradient(180deg,#2a2438,#1e1a28);color:#e0d4ff}.chip-place{color:#c9b8ff;border-color:rgba(181,122,255,.45)}";
       document.head.appendChild(st);
     }
     paint();
   }
-  if(document.body) mount();
-  else document.addEventListener("DOMContentLoaded", mount);
+  function decorateCard(card, item){
+    if(!card || !item || !item.place || item.place==="Any") return;
+    var look=card.querySelector(".look");
+    if(look && item.description) look.textContent=item.description;
+    var lore=card.querySelector(".lore");
+    if(lore && item.lore){
+      lore.innerHTML="";
+      var lab=document.createElement("span");
+      lab.className="lore-label";
+      lab.textContent="Lore:";
+      lore.appendChild(lab);
+      lore.appendChild(document.createTextNode(" "+item.lore));
+    }
+    var meta=card.querySelector(".meta-row");
+    if(meta && !meta.querySelector(".chip-place")){
+      var chip=document.createElement("span");
+      chip.className="chip chip-place";
+      chip.textContent=item.place;
+      meta.appendChild(chip);
+    }
+  }
+  function retouchLatest(){
+    var list;
+    try{ list=JSON.parse(localStorage.getItem("tlf-history-v1")||"[]"); }catch(e){ return; }
+    if(!list[0]) return;
+    window.TLF_applyPlace(list[0]);
+    try{ localStorage.setItem("tlf-history-v1", JSON.stringify(list)); }catch(e){}
+    var card=document.querySelector("#result .loot-card");
+    if(card) decorateCard(card, list[0]);
+    var hist=document.querySelector("#history .hist-card");
+    if(hist) decorateCard(hist, list[0]);
+  }
+  function hookBtn(){
+    var btn=document.getElementById("create");
+    if(!btn || btn.dataset.placeHook) return;
+    btn.dataset.placeHook="1";
+    var prev=btn.onclick;
+    btn.onclick=function(){
+      if(typeof prev==="function") prev.apply(this, arguments);
+      setTimeout(retouchLatest, 0);
+    };
+  }
+  function start(){
+    mount();
+    hookBtn();
+  }
+  if(document.body) start();
+  else document.addEventListener("DOMContentLoaded", start);
+  setTimeout(hookBtn, 0);
 })();
