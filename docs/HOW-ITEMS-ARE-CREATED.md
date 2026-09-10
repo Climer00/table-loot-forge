@@ -8,7 +8,7 @@ A short plain-language paper for DMs and followers who want to know what this to
 
 Table Loot Forge does **not** store a vault of finished official magic items and pick one at random.
 
-When you tap **Create**, the app **builds** a new item on the spot from curated pieces: name parts, a named mechanics kit, a rarity stat band, a look paragraph, lore fragments, and a set bonus keyed off the name.
+When you tap **Create**, the app **builds** a new item on the spot from curated pieces: name parts, a named mechanics kit, a rarity stat band, a look paragraph, lore fragments, and a set bonus keyed off the name (gear only).
 
 That is why two Rare Cloaks almost never match — and why the tool feels like a forge instead of a catalog.
 
@@ -35,16 +35,17 @@ Rarity is a label **and** the numbers filled into kit placeholders:
 | Save DC `{dc}` | Typical DC for effects that call for a save |
 | Small / big dice `{d}` `{D}` | Damage, healing, similar magnitudes |
 | Uses `{u}` | `1/day` → `at will` |
-| Attune chance | How often gear asks for attunement |
 | Scroll tier | Which scroll family to use (cantrip → high-tier feel) |
 
-| Rarity | Bonus | DC | Small / big dice | Uses | Attune chance | Scroll feel |
-| --- | --- | --- | --- | --- | --- | --- |
-| Common | +0 | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
-| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | ~35% | 1st–2nd |
-| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | ~75% | 3rd–4th |
-| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | ~90% | 5th–6th |
-| Legendary | +3 | 18 | 4d6 / 6d8 | at will | always | 7th–9th |
+| Rarity | Bonus | DC | Small / big dice | Uses | Scroll feel |
+| --- | --- | --- | --- | --- | --- |
+| Common | +0 | 11 | 1d4 / 1d6 | 1/day | cantrip |
+| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | 1st–2nd |
+| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | 3rd–4th |
+| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | 5th–6th |
+| Legendary | +3 | 18 | 4d6 / 6d8 | at will | 7th–9th |
+
+Items do not require attunement.
 
 ---
 
@@ -64,11 +65,11 @@ Kit pools come from `loot-kits-*.js`, `loot-kits-extra.js`, and the pack files `
 1. Load the rarity stat band.
 2. Branch by type (gear / scroll / potion / tincture).
 3. **Name** — gear: adjective + noun (or `X of the Y` / `The X Y`). Consumables: `Potion of …`, `Tincture of …`, `Scroll of …`.
-4. **Mechanics** — pick one named kit; fill `{b}`, `{dc}`, `{d}`, `{D}`, `{u}`, damage type, skill, save. Drop any sentence that would say “gain no bonus.” Roll attunement by rarity chance.
+4. **Mechanics** — pick one named kit; fill `{b}`, `{dc}`, `{d}`, `{D}`, `{u}`, damage type, skill, save. Drop any sentence that would say “gain no bonus.”
 5. **Anti-repeat** — fingerprint the kit titles (or consumable name). If that signature is in the last ~60 used effects, re-roll up to ~12 times.
 6. **Look** — one sensory paragraph for that type.
 7. **Lore** — 2–3 sentences from origin + rumor + quirk fragments.
-8. **Set bonus** — first name-word becomes the set (`Russet Drape` → Russet Set). The card lists what you get if you also wear another item with that word. In addition to each item’s own properties. Same named property does not double. A third piece does not increase the set bonus.
+8. **Set bonus** — gear only. First name-word becomes the set (`Russet Drape` → Russet Set). Potions, tinctures, and scrolls skip this.
 9. **Card + history + share** — same fields drive the on-screen card, the history list, Copy text, and the generated PNG.
 
 Nothing in that pipeline is “look up finished item #47.” It is always combination + fill.
@@ -80,7 +81,7 @@ Nothing in that pipeline is “look up finished item #47.” It is always combin
 - History stores the last ~30 **full items** in `localStorage` on this device.
 - History rows show look + properties (not name-only stubs).
 - **Text players** / **Save image** send the **card image only**.
-- **Copy card** copies player-facing text: name, category, attunement, look, properties, lore. No markdown. No `(DM)` asides.
+- **Copy card** copies player-facing text: name, category, look, properties, lore. No markdown. No `(DM)` asides.
 
 Share from a history row uses the stored item, so players get the same card they would from the fresh Create.
 
@@ -99,7 +100,6 @@ Share from a history row uses the stored item, so players get the same card they
 - Name pattern and words
 - Which named kit
 - Damage type / skill / save when the kit needs them
-- Attunement (weighted by rarity)
 - Look line and lore fragments
 - Which generic set rider if the name is not a known theme word
 - Whether a recent-effect collision forces a re-roll
@@ -133,6 +133,7 @@ Treat every card as **5e-flavored homebrew**, not official Wizards material.
 | `loot-hist.js` | Full text on history cards |
 | `loot-sets.js` | Set chip + set bonus |
 | `loot-share.js` | Player text + card PNG |
+| `loot-no-attune.js` | Strip leftover attunement text |
 
 Repo overview: [../README.md](../README.md)
 
