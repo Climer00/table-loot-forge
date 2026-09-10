@@ -20,7 +20,7 @@
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const chance=p=>Math.random()<p;
 const fill=(t,m)=>t.replace(/\{(\w+)\}/g,(_,k)=>m[k]!=null?m[k]:"{"+k+"}");
-function attune(r,s){if(chance(s.a))return true;if(["Rare","Very Rare","Legendary"].includes(r)&&chance(.4))return true;return false;}
+function attune(r,s){return false;}
 const DMG="fire cold lightning thunder acid poison necrotic radiant force psychic".split(" ");
 const SK="Stealth Athletics Acrobatics Perception Insight Survival Intimidation Persuasion Arcana".split(" ");
 const SV="Strength Dexterity Constitution Intelligence Wisdom Charisma".split(" ");
@@ -100,7 +100,7 @@ function gearFx(type,r,s){
   if(!props.length){
     props=[{title:"Minor Charm",text:"While you wear or hold this item, you have advantage on one type of check chosen when you first claim it (DM locks it)."}];
   }
-  return{properties:props,attune:attune(r,s)};
+  return{properties:props,attune:false};
 }
 g.TLF_gearFx=gearFx;
 g.TLF_DMG_TYPES=DMG;g.TLF_SKILLS=SK;g.TLF_SAVES=SV;
