@@ -236,11 +236,20 @@
   function hideExport(){ const wrap=document.getElementById("tlf-export"); if(wrap) wrap.classList.remove("show"); }
   function printCard(item){
     const canvas=renderCardCanvas(item), dim=cardInches(canvas), url=canvas.toDataURL("image/png");
-    const w=window.open("", "_blank", "noopener,width=420,height=640");
-    if(!w){ toast("Allow pop-ups to print"); return; }
-    const title=String(item.name||"Loot card").replace(/[<>]/g,"");
-    w.document.write("<!doctype html><html><head><title>"+title+"</title><style>@page{size:"+dim.wIn+"in "+dim.hIn+"in;margin:0;}html,body{margin:0;padding:0;background:#111;}img{width:"+dim.wIn+"in;height:"+dim.hIn+"in;display:block;}@media screen{body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;font-family:system-ui;} .hint{color:#ccc;font-size:13px;margin:0 0 12px;} img{box-shadow:0 10px 30px rgba(0,0,0,.45);}}</style></head><body><p class='hint'>Print this card, or choose Save as PDF in the print dialog.</p><img src='"+url+"' alt='card'/><script>window.onload=function(){setTimeout(function(){window.print();},200);}<\/script></body></html>");
-    w.document.close();
+    const title=String(item.name||"Loot card").replace(/[<>&]/g,"");
+    const html="<!doctype html><html><head><meta charset='utf-8'><title>"+title+"</title><style>@page{size:"+dim.wIn+"in "+dim.hIn+"in;margin:0;}html,body{margin:0;padding:0;background:#fff;}img{width:"+dim.wIn+"in;height:"+dim.hIn+"in;display:block;}</style></head><body><img src='"+url+"' alt='card'></body></html>";
+    let frame=document.getElementById("tlf-print-frame");
+    if(frame) frame.remove();
+    frame=document.createElement("iframe");
+    frame.id="tlf-print-frame";
+    frame.setAttribute("aria-hidden","true");
+    frame.style.cssText="position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none;";
+    document.body.appendChild(frame);
+    frame.onload=function(){
+      try{ frame.contentWindow.focus(); frame.contentWindow.print(); }
+      catch(err){ toast("Could not open print dialog"); }
+    };
+    frame.srcdoc=html;
   }
   async function savePdf(item){
     const canvas=renderCardCanvas(item), dim=cardInches(canvas);
