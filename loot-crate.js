@@ -4,6 +4,7 @@
   const DEFENSE=["Armor","Shield","Helmet"];
   const WORN=["Cloak","Necklace","Ring","Gloves","Belt","Boots"];
   const SIP=["Potion","Tincture","Scroll"];
+  const MARK_KEY="tlf-crate-marks-v1";
 
   function pick(a){return a[Math.floor(Math.random()*a.length)];}
   function shuffle(a){
@@ -129,6 +130,68 @@
     toast._tid=setTimeout(function(){ t.classList.remove("show"); },1800);
   }
 
+  function loadMarks(){
+    try{
+      const a=JSON.parse(localStorage.getItem(MARK_KEY)||"[]");
+      return Array.isArray(a)?a:[];
+    }catch(e){ return []; }
+  }
+  function saveMarks(a){
+    try{ localStorage.setItem(MARK_KEY, JSON.stringify(a.slice(-80))); }catch(e){}
+  }
+
+  function paintCard(card, kind){
+    if(!card) return;
+    const boss=kind==="Boss";
+    card.classList.remove("crate-chest","crate-boss");
+    card.classList.add(boss?"crate-boss":"crate-chest");
+    card.dataset.crateKind=kind;
+    const meta=card.querySelector(".meta-row");
+    if(meta && !meta.querySelector(".chip-crate")){
+      const chip=document.createElement("span");
+      chip.className="chip chip-crate";
+      chip.textContent=boss?"BOSS":"CHEST";
+      meta.appendChild(chip);
+    }else if(meta){
+      const chip=meta.querySelector(".chip-crate");
+      if(chip) chip.textContent=boss?"BOSS":"CHEST";
+    }
+  }
+
+  function markFresh(n, kind){
+    const hist=[].slice.call(document.querySelectorAll("#history .loot-card"));
+    const result=document.querySelector("#result .loot-card");
+    const targets=hist.slice(0, n);
+    if(result) targets.unshift(result);
+    const marks=loadMarks();
+    targets.forEach(function(card){
+      paintCard(card, kind);
+      marks.push({
+        id:card.getAttribute("data-id")||"",
+        name:((card.querySelector(".item-name")||{}).textContent||"").trim(),
+        kind:kind,
+        t:Date.now()
+      });
+    });
+    saveMarks(marks);
+  }
+
+  function applyKnown(){
+    const marks=loadMarks();
+    if(!marks.length) return;
+    document.querySelectorAll(".loot-card").forEach(function(card){
+      if(card.dataset.crateKind) return;
+      const id=card.getAttribute("data-id")||"";
+      const name=((card.querySelector(".item-name")||{}).textContent||"").trim();
+      let hit=null;
+      for(let i=marks.length-1;i>=0;i--){
+        const m=marks[i];
+        if((id && m.id && m.id===id) || (name && m.name && m.name===name)){ hit=m; break; }
+      }
+      if(hit) paintCard(card, hit.kind);
+    });
+  }
+
   function renderManifest(plan, ok){
     const el=document.getElementById("crate-manifest");
     if(!el) return;
@@ -141,7 +204,7 @@
       lines.push("<li class='crate-li"+mark+"'><span class='crate-role'>"+it.role+"</span> "+it.rarity+" "+it.type+"</li>");
     });
     lines.push("</ul>");
-    lines.push("<p class='crate-foot'>"+gear.length+" gear · "+sips.length+" sips · last card is on the table, all of them are in History</p>");
+    lines.push("<p class='crate-foot'>"+gear.length+" gear · "+sips.length+" sips · gold frame = chest, ember frame = boss</p>");
     if(ok<plan.items.length){
       lines.push("<p class='crate-foot'>Forged "+ok+" of "+plan.items.length+". Tap Create if a slot failed.</p>");
     }
@@ -162,6 +225,8 @@
       if(forgeOne(it.rarity, it.type)) ok++;
     });
     renderManifest(plan, ok);
+    markFresh(ok, kind);
+    setTimeout(function(){ markFresh(ok, kind); applyKnown(); }, 50);
     toast(kind+" opened · "+ok+" items");
     try{
       const hist=document.getElementById("history-panel");
@@ -235,7 +300,13 @@
         ".crate-li{display:flex;gap:8px;align-items:baseline;font-size:.85rem;margin:0 0 6px;color:var(--ink)}"+
         ".crate-li.showpiece{color:#d0b0ff}"+
         ".crate-role{display:inline-block;min-width:72px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--copper)}"+
-        ".crate-foot{margin:8px 0 0;font-size:.72rem;color:var(--muted)}";
+        ".crate-foot{margin:8px 0 0;font-size:.72rem;color:var(--muted)}"+
+        ".loot-card.crate-chest{border:3px solid #e0b15a !important;box-shadow:0 0 0 3px #161a20,0 0 0 6px rgba(224,177,90,.9),0 6px 20px rgba(0,0,0,.35) !important}"+
+        ".loot-card.crate-chest::before{border:1px dashed rgba(224,177,90,.6)}"+
+        ".loot-card.crate-boss{border:3px solid #ff8a4a !important;box-shadow:0 0 0 3px #161a20,0 0 0 6px rgba(180,55,20,.95),0 0 22px rgba(255,107,53,.28) !important}"+
+        ".loot-card.crate-boss::before{border:1px dashed rgba(255,138,74,.55)}"+
+        ".chip-crate{color:#e0b15a;border-color:rgba(224,177,90,.55)}"+
+        ".crate-boss .chip-crate{color:#ffb086;border-color:rgba(255,138,74,.55)}";
       document.head.appendChild(st);
     }
 
@@ -247,6 +318,9 @@
       };
     });
     document.getElementById("crate-open").onclick=openCrate;
+    applyKnown();
+    const mo=new MutationObserver(function(){ applyKnown(); });
+    mo.observe(document.body,{childList:true,subtree:true});
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", mount);
