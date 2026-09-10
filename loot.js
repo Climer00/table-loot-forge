@@ -1,4 +1,3 @@
-document.write('<script src="loot-names.js?v=ac-var1"><\/script>');
 /* Table Loot Forge — Create / history / cards */
 (function(){
 const R=["Common","Uncommon","Rare","Very Rare","Legendary"];
@@ -104,7 +103,7 @@ function generate(rarity,type){
   return item;
 }
 const HISTORY_KEY="tlf-history-v1",HISTORY_MAX=30;
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">","\"":""","'":"&#39;"}[c]));
+function esc(s){return String(s).replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;").replace(/"/g,"\u0026quot;").replace(/'/g,"\u0026#39;");}
 const canShare=typeof navigator!=="undefined"&&typeof navigator.share==="function";
 const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent||"");
 function loadHistory(){try{const a=JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return[];}}
