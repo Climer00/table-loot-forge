@@ -92,11 +92,12 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 <header>
   <div class="brand">DM Tool</div>
   <h1>Table Loot Forge</h1>
-  <p class="tagline">Rarity → type → Create. Beyond/DMG-style card — category, look, named properties, lore.</p>
+  <p class="tagline">Rarity → type → Create. Place is optional — Camp, Road, Ruin, or Body changes the look and lore.</p>
   <span class="homebrew">5e-flavored homebrew</span>
 </header>
 <section class="panel" id="rarity-panel"><label class="sec">1. Rarity</label><div class="grid" id="rarities"></div></section>
 <section class="panel" id="type-panel"><label class="sec">2. Type / Slot</label><div class="grid" id="types"></div></section>
+<section class="panel" id="place-panel"><label class="sec">3. Place <span class="place-opt">optional</span></label><div class="grid" id="places"></div></section>
 <button id="create" type="button" disabled>Create</button>
 <p class="hint" id="hint">Pick a rarity and a type</p>
 <section class="panel result empty" id="result" aria-live="polite"><p class="placeholder">Your forged item lands here.</p></section>
@@ -134,8 +135,9 @@ footer{text-align:center;color:var(--muted);font-size:.68rem;margin-top:8px;line
 <script src="loot-consumables.js?v=kits100"></script>
 <script src="loot-names.js?v=ac-var1"></script>
 <script src="loot.js?v=plain3"></script>
+<script src="loot-place.js?v=place1"></script>
 <script src="loot-crate.js?v=crate2"></script>
-<script src="loot-desk.js?v=desk1"></script>
+<script src="loot-desk.js?v=desk2"></script>
 <script src="loot-hist.js?v=hist1"></script>
 <script src="loot-sets.js?v=set2"></script>
 <script src="loot-share.js?v=export2"></script>
