@@ -1,112 +1,100 @@
 # Table Loot Forge
 
-On-the-spot **D&D 5e-flavored homebrew** loot generator for DMs.
-Pick a rarity, pick a type/slot, tap **Create** — get one table-ready **loot card** in a Beyond/DMG hybrid layout: category line, look, named properties, set bonus, and lore.
+A phone-friendly loot maker for DMs who need an item *right now*.
 
-Built for mid-session speed: big tap targets, phone-first, adjudication-simple. Effects are familiar in shape (rarities, slots, DCs, dice) but freer than official items. Everything is labeled **Homebrew**.
+Pick a rarity, pick a slot, hit Create. You get one homebrew card: name, what it looks like, what it does, a little lore. Numbers follow 5e habits (rarities, DCs, dice) but the items themselves are made up. Every card is marked Homebrew.
+
+Not an official treasure list. Not affiliated with Wizards of the Coast.
 
 ## Open it
 
-- **Repo:** https://github.com/Climer00/table-loot-forge
-- **Live:** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
-- Or clone/download and open `index.html` in a browser (zero build, no install).
+- Live: https://raw.githack.com/Climer00/table-loot-forge/main/index.html
+- Or download the repo and open `index.html`. No install, no build.
 
-If a phone still shows an old card after a push, hard-refresh that live URL (or bump the `?v=` query on the script tags in `index.html`).
+If the page looks stuck on an old version, hard-refresh. Phones love cached scripts.
 
-## How to use
+## The two-tap path
 
-1. Select a **Rarity** — Common, Uncommon, Rare, Very Rare, Legendary
-2. Select a **Type** — Weapon, Armor, Shield, Helmet, Cloak, Necklace, Ring, Gloves, Belt, Boots, Scroll, Potion, Tincture
-3. Tap **Create** (enabled only when both are selected)
-4. Read the card: name, category line, look, named properties, **set bonus**, lore
+1. Rarity (Common through Legendary)
+2. Type (weapon, armor, worn slots, scroll, potion, tincture)
+3. Create
 
-Tap Create again anytime for another roll with the same filters.
+Hit Create again with the same picks if you don't like the roll.
 
-### History
+**Table** mode is the skinny phone column. **Desk** mode is the wide PC layout — controls on the left, cards on the right. Tabs are at the top. The page remembers which one you used.
 
-Creates are saved in **localStorage** (last ~30). History now shows the **full item** (look + properties), not just the name. Tap a row to bring it back as the current card. **Clear history** wipes the list on this device only.
+## After a fight: crates
 
-Older rows saved before this update may still be stubs. Create those items once more and they store complete.
+If you want a pile instead of one item, use **Crate**.
 
-### Share to players
+- Set player count and party level
+- Chest or Boss
+- Open crate
 
-On the current card and on history rows:
+It's a shared stash, not one gift per PC. Slots don't repeat (you won't get four rings). Level picks the rarity band. Boss adds one extra showpiece a step above the rest.
 
-| Button | What it does |
-| --- | --- |
-| **Text players** | Shares **only the card image** (PNG) through the phone share sheet |
-| **Save image** | Same image — share sheet if the phone allows files, otherwise downloads the PNG |
-| **Copy card** | Copies clean player text (no markdown, no DM asides) |
+Chest cards get a gold frame and a CHEST chip. Boss cards get an ember frame and a BOSS chip.
 
-The image wraps look and properties inside the frame. It does not send a second text block under the picture.
+## History and sharing
 
-## What is on a card
+Last ~30 creates stay on this device.
 
-1. **Name** — adjective + noun (or `X of the Y`)
-2. **Category line** — `Weapon (any), rare` / `Wondrous item (cloak), uncommon` / `Potion, common`
-3. **Chips** — Homebrew, Attunement (if needed), **Set: Russet** (from the shared first name)
-4. **Look** — short appearance paragraph
-5. **Named properties** — `Zephyr Shawl. …` then `Gust Step. …`
-6. **Set bonus** — extra rider if the wearer also has another item with the same first name. Does **not** double the same property. A third piece does not increase the set bonus.
-7. **Lore** — origin / rumor / quirk
+- Tap a history row to bring it back
+- **Text players** / **Save image** send the card picture only
+- **Copy card** copies the words you'd read to the table (no markdown, no DM notes)
 
-Zero-bonus lines are stripped. If a kit would have said “you gain no bonus to …” that sentence is not printed.
+Old history from before the full-card update may only have a name. Make that item again and it stores complete.
 
-## Set bonus
+## What's on a card
 
-Items that share a first name-word are a set:
+Name, category line, a look paragraph, named properties, lore.
 
-- Russet Drape + Russet Band → **Russet Set**
-- Seal of the Obsidian + Obsidian Helm → **Obsidian Set**
+If a kit would have printed "you gain no bonus to …" that line is dropped.
 
-Wear two pieces from the same set: keep each item’s own properties, then add the set line. Same named property does not stack; use the better copy, then apply the set rider once.
+**Sets** only show on lasting gear (weapons, armor, worn stuff). Two items that share a first name — Russet Drape and Russet Band — pick up a Russet Set line. Each piece still does its own thing. The set is extra. Same named bonus does not double. A third piece doesn't make the set stronger.
 
-## Rarity stat bands
+Potions, tinctures, and scrolls do not get sets.
 
-Rarity is a label **and** the numbers filled into kits (`{b}`, `{dc}`, `{d}`, `{D}`, `{u}`):
+## Rarity numbers
 
-| Rarity | Bonus | DC | Small / big dice | Uses | Attune chance | Scroll feel |
+Rarity is the label and the numbers that get plugged into the kit.
+
+| Rarity | Bonus | DC | Small / big dice | Uses | Attune? | Scroll feel |
 | --- | --- | --- | --- | --- | --- | --- |
-| Common | +0 | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
-| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | ~35% | 1st–2nd |
-| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | ~75% | 3rd–4th |
-| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | ~90% | 5th–6th |
+| Common | +0 | 11 | 1d4 / 1d6 | 1/day | almost never | cantrip |
+| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | sometimes | 1st–2nd |
+| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | usually | 3rd–4th |
+| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | almost always | 5th–6th |
 | Legendary | +3 | 18 | 4d6 / 6d8 | at will | always | 7th–9th |
 
-If `{b}` is 0, that bonus line is omitted from the card.
+Very Rare weapons also pick a profile instead of always printing +2 to hit and damage: Duelist, Brutal, Balanced, Hungry, Keen, or Siege. The second line is a job (control, defense, movement, and so on), not another copy of "extra 3d6."
 
-## How items are created
+## How a card gets built
 
-This is **not** a catalog of finished official items. Create combines curated tables:
+Create does not look up a finished official item. It mixes:
 
-- rarity stat band
-- a **named kit** for that slot (real titles, not `R5` / `Fx5` stubs)
-- name + look + lore fragments
-- set bonus keyed off the name
+- the rarity numbers above
+- a named kit for that slot
+- name / look / lore scraps
+- a set line on gear, if the name matches a theme
 
-Gear draws from base kits + extra kits + pack files (`loot-kits-pack-*-1/2/3.js`) plus rarity-tagged extras. Consumables use `loot-potions.js` and `loot-scrolls-*.js`.
+It also tries not to hand you the same kit twice in a row.
 
-The forge keeps a local ring of recent effect signatures and re-rolls up to ~12 times so the same kit is less likely to land twice in a session.
+Longer walkthrough: [docs/HOW-ITEMS-ARE-CREATED.md](docs/HOW-ITEMS-ARE-CREATED.md)
 
-Plain-language walkthrough: **[docs/HOW-ITEMS-ARE-CREATED.md](docs/HOW-ITEMS-ARE-CREATED.md)**  
-Docs index: **[docs/README.md](docs/README.md)**
+## Files, if you're poking around
 
-## File map
-
-| File | Job |
+| File | What it's for |
 | --- | --- |
-| `index.html` | Phone UI + script load order |
-| `loot.js` | Create pipeline, history, category line |
-| `loot-flavor.js` | Look + lore fragments |
-| `loot-mech.js` | Pick kit, fill placeholders, drop stub kits |
-| `loot-kits-*.js` / `loot-kits-pack-*.js` | Named property kits per slot |
-| `loot-potions.js` | Potions + tinctures |
-| `loot-scrolls-*.js` | Scroll pools + picker |
-| `loot-card-tidy.js` | Strip “no bonus” sentences |
-| `loot-hist.js` | Restore full text on history cards |
-| `loot-sets.js` | Set chip + set bonus line |
-| `loot-share.js` | Player text + generated card image |
-
-## License / affiliation
-
-Fan tool for personal/table use. Not affiliated with Wizards of the Coast.
+| `index.html` | The page |
+| `loot.js` | Create, history |
+| `loot-flavor.js` | Looks and lore |
+| `loot-mech.js` | Pick a kit and fill in the numbers |
+| `loot-kits-*.js` | Gear kits |
+| `loot-weapon-vr.js` | Very Rare weapon profiles |
+| `loot-potions.js` / `loot-scrolls-*.js` | Sips and scrolls |
+| `loot-crate.js` | Chest / Boss pile |
+| `loot-desk.js` | Table / Desk layout |
+| `loot-sets.js` | Set bonus on gear |
+| `loot-share.js` | Player text and card image |
+| `loot-hist.js` | Full text on history rows |
