@@ -2,7 +2,7 @@
 
 Homebrew loot generator for D&D 5e tables. Pick a rarity and a slot, tap **Create**, get one card you can read out between turns.
 
-Cards follow familiar 5e shapes — rarity, slot, DC, dice, attunement — but the items are built on the spot, not pulled from the DMG. Everything is labeled **Homebrew**. Phone-first, big tap targets, no login, no build step.
+Cards follow familiar 5e shapes — rarity, slot, DC, dice — but the items are built on the spot, not pulled from the DMG. Everything is labeled **Homebrew**. Phone-first, big tap targets, no login, no build step.
 
 Not affiliated with Wizards of the Coast.
 
@@ -73,13 +73,15 @@ Chest cards get a gold frame + **CHEST** chip. Boss cards get an ember frame + *
 
 1. **Name** — adjective + noun, or `X of the Y`
 2. **Category line** — `Weapon (any), rare` / `Wondrous item (cloak), uncommon` / `Potion, common`
-3. **Chips** — Homebrew, Attunement if needed, Set on gear, CHEST/BOSS if it came from a crate
+3. **Chips** — Homebrew, Set on gear, CHEST/BOSS if it came from a crate
 4. **Look** — short appearance paragraph
 5. **Named properties** — `Zephyr Shawl. …` then `Gust Step. …`
 6. **Set bonus** — gear only; extra rider if the wearer also has another item with the same first name
 7. **Lore** — origin / rumor / quirk
 
 If a kit would have printed “you gain no bonus to …” that sentence is dropped.
+
+Items do **not** require attunement.
 
 ## Set bonus
 
@@ -96,13 +98,13 @@ Wear two pieces: keep each item’s own properties, then add the set line. The s
 
 Rarity is the label **and** the numbers filled into kits (`{b}`, `{dc}`, `{d}`, `{D}`, `{u}`):
 
-| Rarity | Bonus | DC | Small / big dice | Uses | Attune chance | Scroll feel |
-| --- | --- | --- | --- | --- | --- | --- |
-| Common | +0 | 11 | 1d4 / 1d6 | 1/day | ~5% | cantrip |
-| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | ~35% | 1st–2nd |
-| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | ~75% | 3rd–4th |
-| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | ~90% | 5th–6th |
-| Legendary | +3 | 18 | 4d6 / 6d8 | at will | always | 7th–9th |
+| Rarity | Bonus | DC | Small / big dice | Uses | Scroll feel |
+| --- | --- | --- | --- | --- | --- |
+| Common | +0 | 11 | 1d4 / 1d6 | 1/day | cantrip |
+| Uncommon | +1 | 13 | 1d6 / 2d6 | 1/day | 1st–2nd |
+| Rare | +1 | 15 | 2d6 / 3d6 | 2/day | 3rd–4th |
+| Very Rare | +2 | 16 | 3d6 / 4d8 | 3/day | 5th–6th |
+| Legendary | +3 | 18 | 4d6 / 6d8 | at will | 7th–9th |
 
 If `{b}` is 0, that bonus line is omitted from the card.
 
@@ -152,3 +154,4 @@ Walkthrough: [docs/HOW-ITEMS-ARE-CREATED.md](docs/HOW-ITEMS-ARE-CREATED.md)
 | `loot-hist.js` | Restore full text on history cards |
 | `loot-sets.js` | Set chip + set bonus (gear only) |
 | `loot-share.js` | Player text + generated card image |
+| `loot-no-attune.js` | Strip attunement chips and category text |
