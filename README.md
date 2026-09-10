@@ -8,11 +8,11 @@ Not affiliated with Wizards of the Coast.
 
 ## Open it
 
-- **Live:** https://raw.githack.com/Climer00/table-loot-forge/main/index.html
+- **Live:** https://raw.githack.com/Climer00/table-loot-forge/e7ea11c85154be41c56b6cc0d2ce745158c0b888/index.html
 - **Repo:** https://github.com/Climer00/table-loot-forge
 - Or clone / download and open `index.html` in a browser.
 
-If a phone still shows an old card after a push, hard-refresh the live URL (or bump the `?v=` query on the script tags in `index.html`).
+That Live URL is pinned to the current working commit so phones do not keep an old broken copy. When we ship the next batch of changes, the Live link gets pointed at the new commit.
 
 ## How to use
 
@@ -29,7 +29,7 @@ Tap Create again anytime for another roll with the same filters.
 
 Creates are stored in `localStorage` on this device (last ~30). History shows the full item — look and properties, not just the name. Tap a row to bring it back as the current card. **Clear history** only wipes this device.
 
-Rows saved before the full-card update may still be stubs. Create those items once more and they store complete.
+Each history card has a checkbox. **Select all** / **Print 3×3 PDF** lays the checked cards on letter paper, 9 per page. Use the print dialog to send it to a printer or Save as PDF.
 
 ### Share
 
@@ -37,11 +37,11 @@ On the current card and on history rows:
 
 | Button | What it does |
 | --- | --- |
-| **Text players** | Shares only the card image (PNG) through the phone share sheet |
-| **Save image** | Same image — share sheet if the phone allows files, otherwise a download |
-| **Copy card** | Copies player-facing text (no markdown, no DM asides) |
+| **Text players** | Player-facing text through the phone share sheet |
+| **Copy card** | Same text onto the clipboard |
+| **Save / Print** | PNG download, print one 2.5 inch card, or save that card as PDF |
 
-Look and properties wrap inside the image. The share does not also dump a text block under the picture.
+Look and properties wrap inside the image.
 
 ## Crates (chest / boss)
 
@@ -153,5 +153,5 @@ Walkthrough: [docs/HOW-ITEMS-ARE-CREATED.md](docs/HOW-ITEMS-ARE-CREATED.md)
 | `loot-card-tidy.js` | Strip “no bonus” sentences |
 | `loot-hist.js` | Restore full text on history cards |
 | `loot-sets.js` | Set chip + set bonus (gear only) |
-| `loot-share.js` | Player text + generated card image |
-| `loot-no-attune.js` | Strip attunement chips and category text |
+| `loot-share.js` | Player text + card image + single-card print/PDF |
+| `loot-history-print.js` | History checkboxes + letter 3×3 sheet |
