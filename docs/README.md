@@ -6,7 +6,7 @@ App overview, live link, crates, sets, and the file map live in [../README.md](.
 | --- | --- |
 | [HOW-ITEMS-ARE-CREATED.md](HOW-ITEMS-ARE-CREATED.md) | What Create actually does: rarity band, named kits, placeholders, anti-repeat, history, share |
 
-Live: https://raw.githack.com/Climer00/table-loot-forge/e7ea11c85154be41c56b6cc0d2ce745158c0b888/index.html
+Live: https://raw.githack.com/Climer00/table-loot-forge/main/index.html
 
 Current behavior in short:
 
