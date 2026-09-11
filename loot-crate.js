@@ -177,6 +177,7 @@
   }
 
   function applyKnown(){
+    if(window.TLF_quiet) return;
     const marks=loadMarks();
     if(!marks.length) return;
     document.querySelectorAll(".loot-card").forEach(function(card){
@@ -221,9 +222,15 @@
     const kind=kindEl?kindEl.getAttribute("data-kind"):"Chest";
     const plan=buildPlan(players, level, kind);
     let ok=0;
-    plan.items.forEach(function(it){
-      if(forgeOne(it.rarity, it.type)) ok++;
-    });
+    window.TLF_quiet=true;
+    try{
+      plan.items.forEach(function(it){
+        if(forgeOne(it.rarity, it.type)) ok++;
+      });
+    }finally{
+      window.TLF_quiet=false;
+    }
+    if(typeof window.TLF_renderHistory==="function") window.TLF_renderHistory();
     renderManifest(plan, ok);
     markFresh(ok, kind);
     setTimeout(function(){ markFresh(ok, kind); applyKnown(); }, 50);
