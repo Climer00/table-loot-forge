@@ -57,8 +57,8 @@ function effectSig(item){
   if(item.effectId)return item.effectId;
   if(item.type==="Scroll"||item.type==="Potion"||item.type==="Tincture"){
     let n=String(item.name||"");
-    n=n.replace(/^Potion of \S+ /,"Potion:");
-    n=n.replace(/^Tincture of \S+ /,"Tincture:");
+    n=n.replace(/^Potion of \\S+ /,"Potion:");
+    n=n.replace(/^Tincture of \\S+ /,"Tincture:");
     n=n.replace(/^Scroll of /,"Scroll:");
     return n;
   }
@@ -165,13 +165,16 @@ function bindCardActions(root,item){if(!root)return;const shareBtn=root.querySel
 let selR=null,selT=null,currentItem=null;
 const re=document.getElementById("rarities"),te=document.getElementById("types"),btn=document.getElementById("create"),hint=document.getElementById("hint"),res=document.getElementById("result");
 const histEl=document.getElementById("history"),histEmpty=document.getElementById("history-empty"),clearBtn=document.getElementById("clear-history");
-function sync(){const ok=!!(selR&&selT);btn.disabled=!ok;hint.textContent=!selR&&!selT?"Pick a rarity and a type":!selR?"Pick a rarity":!selT?"Pick a type":"Ready — tap Create";}
+function sync(){const ok=!!(selR&&selT);btn.disabled=!ok;hint.textContent=!selR&&!selT?"Pick a rarity and a type":!selR?"Pick a rarity":!selT?"Pick a type":selT==="Random"?"Ready — Create picks a random slot":"Ready — tap Create";}
 R.forEach(r=>{const b=document.createElement("button");b.type="button";b.className="btn "+(RC[r]||"");b.textContent=r;b.onclick=()=>{selR=r;re.querySelectorAll(".btn").forEach(x=>x.classList.toggle("active",x.textContent===r));sync();};re.appendChild(b);});
 T.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="btn type";b.textContent=t;b.onclick=()=>{selT=t;te.querySelectorAll(".btn").forEach(x=>x.classList.toggle("active",x.textContent===t));sync();};te.appendChild(b);});
+const randBtn=document.createElement("button");randBtn.type="button";randBtn.className="btn type random-type";randBtn.textContent="Random";
+randBtn.onclick=()=>{selT="Random";te.querySelectorAll(".btn").forEach(x=>x.classList.toggle("active",x.textContent==="Random"));sync();};
+te.appendChild(randBtn);
 function showItem(item,opts){opts=opts||{};currentItem=item;res.classList.remove("empty");res.classList.remove("flash");void res.offsetWidth;if(opts.flash!==false)res.classList.add("flash");res.innerHTML=cardHtml(item,{});bindCardActions(res.querySelector(".loot-card"),item);try{res.scrollIntoView({behavior:"smooth",block:"nearest"});}catch(e){}}
 function renderHistory(){const list=loadHistory();if(!histEl)return;histEl.innerHTML="";if(histEmpty)histEmpty.hidden=list.length>0;if(clearBtn)clearBtn.hidden=list.length===0;list.forEach(entry=>{const wrap=document.createElement("div");wrap.innerHTML=cardHtml(entry,{compact:true,id:entry.id});const card=wrap.firstChild;card.onclick=()=>showItem(entry,{flash:true});bindCardActions(card,entry);histEl.appendChild(card);});}
 if(clearBtn)clearBtn.onclick=()=>{if(!loadHistory().length)return;if(!confirm("Clear all history?"))return;saveHistory([]);renderHistory();showToast("History cleared");};
-btn.onclick=()=>{if(!selR||!selT)return;const item=generate(selR,selT);pushHistory(item);showItem(item,{flash:true});renderHistory();};
+btn.onclick=()=>{if(!selR||!selT)return;const type=selT==="Random"?T[Math.floor(Math.random()*T.length)]:selT;const item=generate(selR,type);pushHistory(item);showItem(item,{flash:true});renderHistory();};
 renderHistory();
 sync();
 })();
