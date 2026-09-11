@@ -155,16 +155,20 @@
       meta.appendChild(chip);
     }
   }
-  function retouchLatest(){
+  var pending=0;
+  var flushTid=0;
+  function retouchN(n){
+    if(!n) return;
     var list;
     try{ list=JSON.parse(localStorage.getItem("tlf-history-v1")||"[]"); }catch(e){ return; }
-    if(!list[0]) return;
-    window.TLF_applyPlace(list[0]);
+    if(!list.length) return;
+    var slice=list.slice(0, n);
+    slice.forEach(function(item){ window.TLF_applyPlace(item); });
     try{ localStorage.setItem("tlf-history-v1", JSON.stringify(list)); }catch(e){}
     var card=document.querySelector("#result .loot-card");
     if(card) decorateCard(card, list[0]);
-    var hist=document.querySelector("#history .hist-card");
-    if(hist) decorateCard(hist, list[0]);
+    var histCards=document.querySelectorAll("#history .hist-card");
+    for(var i=0;i<slice.length && i<histCards.length;i++) decorateCard(histCards[i], slice[i]);
   }
   function hookBtn(){
     var btn=document.getElementById("create");
@@ -173,7 +177,13 @@
     var prev=btn.onclick;
     btn.onclick=function(){
       if(typeof prev==="function") prev.apply(this, arguments);
-      setTimeout(retouchLatest, 0);
+      pending++;
+      clearTimeout(flushTid);
+      flushTid=setTimeout(function(){
+        var n=pending;
+        pending=0;
+        retouchN(n);
+      }, 0);
     };
   }
   function start(){
