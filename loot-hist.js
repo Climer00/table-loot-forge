@@ -64,19 +64,27 @@
     document.head.appendChild(st);
   }
   var busy=false;
+  var scanTimer=null;
   function scan(){
     if(busy || window.TLF_quiet) return;
     busy=true;
     try{ document.querySelectorAll(".hist-card").forEach(hydrate); }
     finally{ busy=false; }
   }
-  const mo=new MutationObserver(function(){
+  function scheduleScan(){
     if(busy || window.TLF_quiet) return;
-    mo.disconnect();
-    try{ scan(); }
-    finally{ if(document.body) mo.observe(document.body,{childList:true,subtree:true}); }
-  });
-  if(document.body) mo.observe(document.body,{childList:true,subtree:true});
-  else document.addEventListener("DOMContentLoaded",function(){ mo.observe(document.body,{childList:true,subtree:true}); scan(); });
-  scan();
+    if(scanTimer) clearTimeout(scanTimer);
+    scanTimer=setTimeout(function(){ scanTimer=null; scan(); }, 50);
+  }
+  function observeRoot(){
+    return document.getElementById("history") || document.getElementById("history-panel") || document.body;
+  }
+  const mo=new MutationObserver(scheduleScan);
+  function start(){
+    scan();
+    var root=observeRoot();
+    if(root) mo.observe(root,{childList:true,subtree:true});
+  }
+  if(document.body) start();
+  else document.addEventListener("DOMContentLoaded", start);
 })();
