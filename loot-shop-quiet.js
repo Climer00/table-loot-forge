@@ -1,4 +1,4 @@
-/* Shop stocks in memory. Never clicks Create. Tap a row to see the card. */
+/* Shop stocks in memory. Tap a row to show + pin it in History once. */
 (function(){
   var GEAR="Weapon Armor Shield Helmet Cloak Necklace Ring Gloves Belt Boots".split(" ");
   var ARMS="Weapon Armor Shield".split(" ");
@@ -121,6 +121,19 @@
       try{ window.TLF_showItem(item,{flash:true}); }catch(e){}
     }
   }
+  function pinListing(hit){
+    if(!hit || !hit.item) return;
+    showItem(hit.item);
+    var copy={};
+    try{ copy=JSON.parse(JSON.stringify(hit.item)); }catch(e){ copy=hit.item; }
+    copy.gp=hit.gp;
+    copy.fromShop=true;
+    var added=false;
+    if(typeof window.TLF_keepItem==="function"){
+      added=window.TLF_keepItem(copy);
+    }
+    toast(added?"Saved to history":"Already in history");
+  }
   function toast(msg){
     var t=document.getElementById("toast");
     if(!t) return;
@@ -166,7 +179,7 @@
       if(fillSlot(i, rarityFor(levelN(), wealth(), "stock"), it.type)){
         renderBoard();
         if(board[i] && board[i].item) showItem(board[i].item);
-        toast("Rerolled listing");
+        toast("Rerolled listing · previous keep stays in history");
       }
     }finally{ window.TLF_quiet=false; }
   }
@@ -272,7 +285,7 @@
       if(row && board[+row.getAttribute("data-i")]){
         e.stopPropagation();
         var hit=board[+row.getAttribute("data-i")];
-        if(hit && hit.item) showItem(hit.item);
+        if(hit && hit.item) pinListing(hit);
       }
     }, true);
     return true;
