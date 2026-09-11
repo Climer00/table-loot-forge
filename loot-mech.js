@@ -12,9 +12,16 @@
     "loot-kits-pack-belt-1.js","loot-kits-pack-belt-2.js","loot-kits-pack-belt-3.js",
     "loot-kits-pack-boots-1.js","loot-kits-pack-boots-2.js","loot-kits-pack-boots-3.js"
   ];
-  for(var i=0;i<packs.length;i++){
-    document.write('<script src="'+packs[i]+'?v=kits100c"><\/script>');
+  function inject(){
+    packs.forEach(function(src){
+      var s=document.createElement("script");
+      s.src=src+"?v=kits100c";
+      s.async=true;
+      document.head.appendChild(s);
+    });
   }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", inject);
+  else inject();
 })();
 (function(g){
 const pick=a=>a[Math.floor(Math.random()*a.length)];
