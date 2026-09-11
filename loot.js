@@ -171,10 +171,10 @@ T.forEach(t=>{const b=document.createElement("button");b.type="button";b.classNa
 const randBtn=document.createElement("button");randBtn.type="button";randBtn.className="btn type random-type";randBtn.textContent="Random";
 randBtn.onclick=()=>{selT="Random";te.querySelectorAll(".btn").forEach(x=>x.classList.toggle("active",x.textContent==="Random"));sync();};
 te.appendChild(randBtn);
-function showItem(item,opts){opts=opts||{};currentItem=item;res.classList.remove("empty");res.classList.remove("flash");void res.offsetWidth;if(opts.flash!==false)res.classList.add("flash");res.innerHTML=cardHtml(item,{});bindCardActions(res.querySelector(".loot-card"),item);try{res.scrollIntoView({behavior:"smooth",block:"nearest"});}catch(e){}}
+function showItem(item,opts){opts=opts||{};currentItem=item;res.classList.remove("empty");res.classList.remove("flash");void res.offsetWidth;if(opts.flash!==false)res.classList.add("flash");res.innerHTML=cardHtml(item,{});bindCardActions(res.querySelector(".loot-card"),item);}
 function renderHistory(){const list=loadHistory();if(!histEl)return;histEl.innerHTML="";if(histEmpty)histEmpty.hidden=list.length>0;if(clearBtn)clearBtn.hidden=list.length===0;list.forEach(entry=>{const wrap=document.createElement("div");wrap.innerHTML=cardHtml(entry,{compact:true,id:entry.id});const card=wrap.firstChild;card.onclick=()=>showItem(entry,{flash:true});bindCardActions(card,entry);histEl.appendChild(card);});}
 if(clearBtn)clearBtn.onclick=()=>{if(!loadHistory().length)return;if(!confirm("Clear all history?"))return;saveHistory([]);renderHistory();showToast("History cleared");};
-btn.onclick=()=>{if(!selR||!selT)return;const type=selT==="Random"?T[Math.floor(Math.random()*T.length)]:selT;const item=generate(selR,type);pushHistory(item);showItem(item,{flash:true});renderHistory();};
+window.TLF_quiet=false;window.TLF_renderHistory=renderHistory;window.TLF_generate=generate;btn.onclick=()=>{if(!selR||!selT)return;const type=selT==="Random"?T[Math.floor(Math.random()*T.length)]:selT;const item=generate(selR,type);pushHistory(item);showItem(item,{flash:!window.TLF_quiet});if(!window.TLF_quiet)renderHistory();};
 renderHistory();
 sync();
 })();
