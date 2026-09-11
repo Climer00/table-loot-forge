@@ -53,7 +53,7 @@
     left.id="desk-left";
     const right=document.createElement("div");
     right.id="desk-right";
-    const nodes=["rarity-panel","type-panel","place-panel","create","hint","crate-panel"].map(function(id){return document.getElementById(id);});
+    const nodes=["rarity-panel","type-panel","place-panel","theme-panel","create","hint","crate-panel"].map(function(id){return document.getElementById(id);});
     const header=document.querySelector("header");
     const anchor=header&&header.nextSibling;
     document.body.insertBefore(left, anchor||null);
