@@ -66,8 +66,20 @@
     document.head.appendChild(st);
   }
   function scan(){ document.querySelectorAll(".hist-card").forEach(hydrate); }
-  const mo=new MutationObserver(scan);
-  if(document.body) mo.observe(document.body,{childList:true,subtree:true});
-  else document.addEventListener("DOMContentLoaded",function(){ mo.observe(document.body,{childList:true,subtree:true}); scan(); });
-  scan();
+  var scanTimer=null;
+  function scheduleScan(){
+    if(scanTimer) clearTimeout(scanTimer);
+    scanTimer=setTimeout(function(){ scanTimer=null; scan(); }, 50);
+  }
+  function observeRoot(){
+    return document.getElementById("history") || document.getElementById("history-panel") || document.body;
+  }
+  const mo=new MutationObserver(scheduleScan);
+  function start(){
+    scan();
+    var root=observeRoot();
+    if(root) mo.observe(root,{childList:true,subtree:true});
+  }
+  if(document.body) start();
+  else document.addEventListener("DOMContentLoaded", start);
 })();
