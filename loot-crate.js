@@ -216,7 +216,7 @@
 
   function openCrate(){
     const players=+$("#crate-players").textContent||4;
-    const level=+$("#crate-level").textContent||5;
+    const level=+$("#crate-level").textContent||3;
     const kindEl=document.querySelector(".crate-kind.active");
     const kind=kindEl?kindEl.getAttribute("data-kind"):"Chest";
     const plan=buildPlan(players, level, kind);
@@ -266,7 +266,7 @@
         '<div class="crate-step"><span class="crate-k">Level</span>'+
           '<div class="crate-stepper" id="crate-level-step">'+
             '<button type="button" class="crate-pm" data-dir="-">−</button>'+
-            '<span class="crate-val" id="crate-level">5</span>'+
+            '<span class="crate-val" id="crate-level">3</span>'+
             '<button type="button" class="crate-pm" data-dir="+">+</button>'+
           '</div></div>'+
       '</div>'+
@@ -311,7 +311,7 @@
     }
 
     stepper("crate-players-step",2,8,4);
-    stepper("crate-level-step",1,20,5);
+    stepper("crate-level-step",1,20,3);
     panel.querySelectorAll(".crate-kind").forEach(function(b){
       b.onclick=function(){
         panel.querySelectorAll(".crate-kind").forEach(function(x){x.classList.toggle("active",x===b);});
