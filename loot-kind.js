@@ -62,9 +62,14 @@
   }
 
   function kindOf(type,name,rarity,item){
-    if(item&&item.type==="Tincture"&&item.kind&&/^(anoint|sling|mark)$/.test(item.kind)) return item.kind;
     if(type==="Potion"||type==="Scroll") return "";
-    if(type==="Tincture") return (item&&item.kind)||"anoint";
+    if(type==="Tincture"){
+      if(item&&item.kind&&/^(anoint|sling|mark)$/.test(item.kind)) return item.kind;
+      var title=item&&item.properties&&item.properties[0]&&item.properties[0].title;
+      var t=String(title||"").toLowerCase();
+      if(t==="sling"||t==="mark"||t==="anoint") return t;
+      return "anoint";
+    }
     var noun=lastNoun(name);
     if(type==="Weapon") return weaponKind(noun,rarity);
     if(type==="Armor") return armorKind(noun);
