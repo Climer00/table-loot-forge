@@ -219,7 +219,9 @@
     saveMarks(marks);
   }
 
+  var locked=false;
   function applyKnown(){
+    if(locked) return;
     const marks=loadMarks();
     if(!marks.length) return;
     document.querySelectorAll(".loot-card").forEach(function(card){
@@ -312,12 +314,11 @@
   function fillSlot(i, rarity, type){
     if(!forgeOne(rarity, type)) return false;
     const card=latestCard();
+    if(!card) return false;
     const bits=cardBits(card);
     const gp=priceOf(bits.rarity||rarity, type, wealth());
-    if(card){
-      paintCard(card, gp);
-      remember(card, gp);
-    }
+    paintCard(card, gp);
+    remember(card, gp);
     board[i]={
       rarity:bits.rarity||rarity,
       type:type,
@@ -329,25 +330,49 @@
   }
 
   function openShop(){
+    const btn=document.getElementById("shop-open");
+    if(btn && btn.dataset.busy==="1") return;
     const n=listingsN();
     const lv=levelN();
     const w=wealth();
     const lay=layout();
     const types=planTypes(n, lay);
     board=[];
-    let ok=0;
-    types.forEach(function(type, i){
+    if(btn){
+      btn.dataset.busy="1";
+      btn.textContent="Stocking…";
+    }
+    locked=true;
+    let i=0, ok=0;
+    function done(){
+      locked=false;
+      renderBoard();
+      applyKnown();
+      if(btn){
+        btn.dataset.busy="";
+        btn.textContent="Open shop";
+      }
+      toast((lay==="full"?"Shop":"Stall")+" opened · "+ok+" listings");
+      try{
+        const boardEl=document.getElementById("shop-board");
+        if(boardEl) boardEl.scrollIntoView({behavior:"smooth", block:"nearest"});
+      }catch(e){}
+    }
+    function step(){
+      if(i>=types.length){ done(); return; }
+      const type=types[i];
       const rare=rarityFor(lv, w, i===types.length-1?"show":"stock");
-      if(fillSlot(i, rare, type)) ok++;
-      else board[i]={rarity:rare, type:type, name:type, cat:type, gp:priceOf(rare,type,w)};
-    });
-    renderBoard();
-    applyKnown();
-    toast((lay==="full"?"Shop":"Stall")+" opened · "+ok+" listings");
-    try{
-      const boardEl=document.getElementById("shop-board");
-      if(boardEl) boardEl.scrollIntoView({behavior:"smooth", block:"nearest"});
-    }catch(e){}
+      try{
+        if(fillSlot(i, rare, type)) ok++;
+        else board[i]={rarity:rare, type:type, name:type, cat:type, gp:priceOf(rare,type,w)};
+      }catch(err){
+        board[i]={rarity:rare, type:type, name:type, cat:type, gp:priceOf(rare,type,w)};
+      }
+      i++;
+      renderBoard();
+      setTimeout(step, 60);
+    }
+    step();
   }
 
   function reroll(i){
@@ -512,8 +537,9 @@
     mountPanel();
     applyJob(currentJob());
     applyKnown();
-    const mo=new MutationObserver(function(){ applyKnown(); });
-    mo.observe(document.body,{childList:true,subtree:true});
+    const mo=new MutationObserver(function(){ if(!locked) applyKnown(); });
+    const hist=document.getElementById("history-panel")||document.body;
+    mo.observe(hist,{childList:true,subtree:true});
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", start);
   else start();
