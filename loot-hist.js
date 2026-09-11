@@ -55,9 +55,7 @@
       else if(actions) inner.insertBefore(block, actions);
       else inner.appendChild(block);
     }
-    if(card.dataset.setReady){
-      delete card.dataset.setReady;
-    }
+    /* keep setReady — deleting it re-fires set watchers on every hydrate */
   }
   if(!document.getElementById("tlt-hist-css")){
     const st=document.createElement("style");
@@ -65,8 +63,19 @@
     st.textContent=".hist-card .look{display:block;margin:0 0 10px}.hist-card .props-block{display:block}.hist-card .lore{display:none}";
     document.head.appendChild(st);
   }
-  function scan(){ document.querySelectorAll(".hist-card").forEach(hydrate); }
-  const mo=new MutationObserver(scan);
+  var busy=false;
+  function scan(){
+    if(busy || window.TLF_quiet) return;
+    busy=true;
+    try{ document.querySelectorAll(".hist-card").forEach(hydrate); }
+    finally{ busy=false; }
+  }
+  const mo=new MutationObserver(function(){
+    if(busy || window.TLF_quiet) return;
+    mo.disconnect();
+    try{ scan(); }
+    finally{ if(document.body) mo.observe(document.body,{childList:true,subtree:true}); }
+  });
   if(document.body) mo.observe(document.body,{childList:true,subtree:true});
   else document.addEventListener("DOMContentLoaded",function(){ mo.observe(document.body,{childList:true,subtree:true}); scan(); });
   scan();
