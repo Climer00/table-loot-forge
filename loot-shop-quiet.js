@@ -171,9 +171,96 @@
     }finally{ window.TLF_quiet=false; }
   }
 
+
+  function ensurePanel(){
+    if(document.getElementById("shop-panel")) return true;
+    var panel=document.createElement("section");
+    panel.className="panel shop-panel";
+    panel.id="shop-panel";
+    panel.innerHTML=
+      '<label class="sec">Shop · stall</label>'+
+      '<div class="grid shop-layouts">'+
+        '<button type="button" class="btn shop-layout active" data-layout="stall">Stall</button>'+
+        '<button type="button" class="btn shop-layout" data-layout="full">Full shop</button></div>'+
+      '<div class="shop-row-ctrls">'+
+        '<div class="shop-step"><span class="shop-k">Level</span>'+
+          '<div class="shop-stepper" id="shop-level-step">'+
+            '<button type="button" class="shop-pm" data-dir="-">−</button>'+
+            '<span class="shop-val" id="shop-level">3</span>'+
+            '<button type="button" class="shop-pm" data-dir="+">+</button></div></div>'+
+        '<div class="shop-step"><span class="shop-k">Listings</span>'+
+          '<div class="shop-stepper" id="shop-count-step">'+
+            '<button type="button" class="shop-pm" data-dir="-">−</button>'+
+            '<span class="shop-val" id="shop-count">6</span>'+
+            '<button type="button" class="shop-pm" data-dir="+">+</button></div></div></div>'+
+      '<div class="grid shop-wealths">'+
+        '<button type="button" class="btn shop-wealth" data-wealth="Poor">Poor</button>'+
+        '<button type="button" class="btn shop-wealth active" data-wealth="Fair">Fair</button>'+
+        '<button type="button" class="btn shop-wealth" data-wealth="Rich">Rich</button></div>'+
+      '<button type="button" class="shop-open" id="shop-open">Open shop</button>'+
+      '<div class="shop-board" id="shop-board" hidden></div>';
+    var left=document.getElementById("desk-left");
+    var crate=document.getElementById("crate-panel");
+    if(left) left.appendChild(panel);
+    else if(crate && crate.parentNode) crate.parentNode.insertBefore(panel, crate.nextSibling);
+    else document.body.appendChild(panel);
+    function step(id, lo, hi, start){
+      var wrap=document.getElementById(id); if(!wrap) return;
+      var val=wrap.querySelector(".shop-val");
+      wrap.querySelector("[data-dir='-']").onclick=function(){ val.textContent=String(Math.max(lo,(+val.textContent||start)-1)); };
+      wrap.querySelector("[data-dir='+']").onclick=function(){ val.textContent=String(Math.min(hi,(+val.textContent||start)+1)); };
+    }
+    step("shop-level-step",1,20,3);
+    step("shop-count-step",4,8,6);
+    panel.querySelectorAll(".shop-layout").forEach(function(b){
+      b.onclick=function(){
+        panel.querySelectorAll(".shop-layout").forEach(function(x){x.classList.toggle("active",x===b);});
+        var lay=b.getAttribute("data-layout");
+        var count=document.getElementById("shop-count");
+        if(count && !board.length) count.textContent=lay==="full"?"8":"6";
+      };
+    });
+    panel.querySelectorAll(".shop-wealth").forEach(function(b){
+      b.onclick=function(){ panel.querySelectorAll(".shop-wealth").forEach(function(x){x.classList.toggle("active",x===b);}); };
+    });
+    if(!document.getElementById("tlt-shop-css")){
+      var st=document.createElement("style"); st.id="tlt-shop-css";
+      st.textContent=".shop-open{width:100%;min-height:52px;border-radius:12px;font-weight:800;border:2px solid rgba(61,205,184,.5);background:linear-gradient(180deg,#1a3330,#152826);color:#b8f0e4}"+
+        ".shop-board{margin-top:12px;background:rgba(0,0,0,.22);border:1px solid rgba(61,205,184,.25);border-radius:10px;padding:8px}"+
+        ".shop-row{display:flex;align-items:center;gap:8px;padding:8px 6px;cursor:pointer}"+
+        ".shop-gp{flex:0 0 72px;font-weight:800;color:#e0b15a}.shop-copy{flex:1;min-width:0}"+
+        ".shop-reroll{border:1px solid rgba(107,124,147,.4);background:var(--bg2);border-radius:8px;padding:8px 10px;min-height:36px}"+
+        ".shop-layout.active,.shop-wealth.active{border-color:var(--teal);color:#fff;background:linear-gradient(180deg,#1a3330,#152826)}"+
+        ".shop-row-ctrls{display:flex;gap:10px;margin-bottom:10px}.shop-step{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 10px}"+
+        ".shop-stepper{display:flex;align-items:center;justify-content:space-between}.shop-pm{width:40px;height:40px;border-radius:8px}"+
+        "body.job-shop #rarity-panel,body.job-shop #type-panel,body.job-shop #create,body.job-shop #hint,body.job-shop #crate-panel{display:none !important}"+
+        "body.job-forge #shop-panel{display:none !important}";
+      document.head.appendChild(st);
+    }
+    if(!document.querySelector(".job-tabs")){
+      var bar=document.createElement("div"); bar.className="job-tabs"; bar.setAttribute("role","tablist");
+      bar.innerHTML='<button type="button" class="job-tab" data-job="forge">Forge</button><button type="button" class="job-tab active" data-job="shop">Shop</button>';
+      var header=document.querySelector("header");
+      if(header) header.appendChild(bar);
+      bar.addEventListener("click", function(e){
+        var b=e.target.closest(".job-tab"); if(!b) return;
+        var j=b.getAttribute("data-job");
+        document.body.classList.toggle("job-shop", j==="shop");
+        document.body.classList.toggle("job-forge", j==="forge");
+        bar.querySelectorAll(".job-tab").forEach(function(x){ x.classList.toggle("active", x===b); });
+      });
+      document.body.classList.add("job-shop");
+      document.body.classList.remove("job-forge");
+    }
+    return true;
+  }
+
   function takeOver(){
     var btn=document.getElementById("shop-open");
     var panel=document.getElementById("shop-board");
+    ensurePanel();
+    btn=document.getElementById("shop-open");
+    panel=document.getElementById("shop-board");
     if(!btn || !panel) return false;
     if(btn.dataset.direct==="1") return true;
     btn.dataset.direct="1";
