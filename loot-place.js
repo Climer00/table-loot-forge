@@ -1,4 +1,4 @@
-/* Table Loot Forge — Place + Theme look/lore overlay */
+/* Table Loot Forge — Place + Theme + Found-with overlay */
 (function(){
   var PLACE_KEY="tlf-place-v1";
   var THEME_KEY="tlf-theme-v1";
@@ -32,7 +32,47 @@
     Fey:["Paid as a guest-gift and meant as a joke. The joke is still running.","Left on a stump after a dance that lasted one night and three years.","A court token. Wearing it is an answer. Nobody told you the question."],
     Sacred:["Lifted from a side-altar after the last candle died. The saint's name is half gone.","A temple inventory listed it as missing, then as never present.","Blessed, then hidden, then found. The blessing did not take the second time."]
   };
+  var JUNK_ANY=["a bent nail","a wax stub","a frayed cord","a scrap of paper with no name","a cracked bead","a pinch of road salt"];
+  var JUNK_PLACE={
+    Road:["a waymark chip","mule hair wound in twine","a coach-ticket stub","charcoal from a milestone"],
+    Camp:["a stolen spoon","a pair of bone dice","stew-fat on a rag","a tally stick with the nights cut off"],
+    Ruin:["a plaster flake","a mosaic tessera","a chip of dead-language stone","dust that will not brush off"],
+    Body:["a folded scrap addressed to someone else","a home-stitch offcut","a thumb-worn bead","a letter that is blank now"]
+  };
+  var JUNK_THEME={
+    Goblin:["a yellowed tooth","an upside-down clan bead","a rusty nail used as a pin"],
+    Bandit:["a strip of stolen silk","a filed-off stamp","a notch-stick of old jobs"],
+    Undead:["a burial copper","a strip of grave linen","a pinch of pale salt"],
+    Dragon:["a flake of scale","coin-dust in a twist of cloth","hoard-soot that will not wipe"],
+    Fey:["a leaf that is still wet","a hair-thin living vine","a dew-glass bead"],
+    Sacred:["a candle stub","a saint-chip","a thread of altar-cloth"]
+  };
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function rand(n){ return Math.floor(Math.random()*n); }
+  function listAnd(bits){
+    bits=bits.filter(Boolean);
+    if(bits.length===1) return bits[0];
+    if(bits.length===2) return bits[0]+" and "+bits[1];
+    return bits.slice(0,-1).join(", ")+", and "+bits[bits.length-1];
+  }
+  function coinFor(rarity){
+    if(rarity==="Common") return (2+rand(7))+" cp";
+    if(rarity==="Uncommon") return (3+rand(10))+" sp";
+    if(rarity==="Rare") return (2+rand(8))+" gp";
+    if(rarity==="Very Rare") return (12+rand(18))+" gp";
+    if(rarity==="Legendary") return (40+rand(41))+" gp";
+    return (1+rand(6))+" sp";
+  }
+  function makeFound(item){
+    var place=item.place||"Any";
+    var theme=item.theme||"Any";
+    var bits=[coinFor(item.rarity)];
+    var pool=(JUNK_PLACE[place]||[]).concat(JUNK_ANY);
+    bits.push(pick(pool));
+    if(theme!=="Any" && JUNK_THEME[theme] && Math.random()<0.85) bits.push(pick(JUNK_THEME[theme]));
+    else if(Math.random()<0.35) bits.push(pick(JUNK_ANY));
+    return listAnd(bits)+".";
+  }
   function loadKey(key, allowed){
     try{
       var s=localStorage.getItem(key);
@@ -58,6 +98,7 @@
     if(place!=="Any" && LORE[place]) loreBits.push(pick(LORE[place]));
     if(theme!=="Any" && THEME_LORE[theme]) loreBits.push(pick(THEME_LORE[theme]));
     if(loreBits.length) item.lore=loreBits.join(" ");
+    item.found=makeFound(item);
     return item;
   };
   function paintGrid(id, attr, cur){
@@ -107,7 +148,7 @@
     if(!document.getElementById("tlf-place-css")){
       var st=document.createElement("style");
       st.id="tlf-place-css";
-      st.textContent=".place-opt{font-weight:650;text-transform:none;letter-spacing:0;color:var(--muted);font-size:.65rem}.btn.place.active{border-color:#c9b8ff;background:linear-gradient(180deg,#2a2438,#1e1a28);color:#e0d4ff}.btn.theme.active{border-color:#e0a36b;background:linear-gradient(180deg,#3a2a18,#241c12);color:#f0d0a8}.chip-place{color:#c9b8ff;border-color:rgba(181,122,255,.45)}.chip-theme{color:#e0a36b;border-color:rgba(224,163,107,.45)}";
+      st.textContent=".place-opt{font-weight:650;text-transform:none;letter-spacing:0;color:var(--muted);font-size:.65rem}.btn.place.active{border-color:#c9b8ff;background:linear-gradient(180deg,#2a2438,#1e1a28);color:#e0d4ff}.btn.theme.active{border-color:#e0a36b;background:linear-gradient(180deg,#3a2a18,#241c12);color:#f0d0a8}.chip-place{color:#c9b8ff;border-color:rgba(181,122,255,.45)}.chip-theme{color:#e0a36b;border-color:rgba(224,163,107,.45)}.found{margin:10px 0 0;font-size:.82rem;color:var(--muted);background:rgba(0,0,0,.14);border:1px dashed rgba(212,165,116,.3);padding:8px 10px;border-radius:8px}.found-label{font-weight:700;color:var(--copper);font-style:normal}";
       document.head.appendChild(st);
     }
     paint();
@@ -120,24 +161,44 @@
     chip.textContent=text;
     meta.appendChild(chip);
   }
+  function setFound(card, text){
+    if(!card || !text) return;
+    var block=card.querySelector(".found");
+    if(!block){
+      block=document.createElement("p");
+      block.className="found";
+      var inner=card.querySelector(".loot-card-inner")||card;
+      var actions=inner.querySelector(".card-actions");
+      if(actions) inner.insertBefore(block, actions);
+      else inner.appendChild(block);
+    }
+    block.innerHTML="";
+    var lab=document.createElement("span");
+    lab.className="found-label";
+    lab.textContent="Found with it:";
+    block.appendChild(lab);
+    block.appendChild(document.createTextNode(" "+text));
+  }
   function decorateCard(card, item){
     if(!card || !item) return;
-    var has=(item.place&&item.place!=="Any")||(item.theme&&item.theme!=="Any");
-    if(!has) return;
-    var look=card.querySelector(".look");
-    if(look && item.description) look.textContent=item.description;
-    var lore=card.querySelector(".lore");
-    if(lore && item.lore){
-      lore.innerHTML="";
-      var lab=document.createElement("span");
-      lab.className="lore-label";
-      lab.textContent="Lore:";
-      lore.appendChild(lab);
-      lore.appendChild(document.createTextNode(" "+item.lore));
+    var flavored=(item.place&&item.place!=="Any")||(item.theme&&item.theme!=="Any");
+    if(flavored){
+      var look=card.querySelector(".look");
+      if(look && item.description) look.textContent=item.description;
+      var lore=card.querySelector(".lore");
+      if(lore && item.lore){
+        lore.innerHTML="";
+        var lab=document.createElement("span");
+        lab.className="lore-label";
+        lab.textContent="Lore:";
+        lore.appendChild(lab);
+        lore.appendChild(document.createTextNode(" "+item.lore));
+      }
     }
     var meta=card.querySelector(".meta-row");
     addChip(meta,"chip-place",item.place);
     addChip(meta,"chip-theme",item.theme);
+    setFound(card, item.found);
   }
   var pending=0;
   var flushTid=0;
